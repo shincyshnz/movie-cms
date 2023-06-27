@@ -3,7 +3,8 @@ import "./App.css";
 import Header from "./components/Header";
 import SideBar from "./components/SideBar";
 import { Route, Routes } from "react-router-dom";
-import MovieCard from "./components/MovieCard";
+import Dashboard from "./Pages/Dashboard";
+import AddGenre from "./Pages/AddGenre";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -13,20 +14,12 @@ function App() {
       <Header />
       <div className="flex">
         <SideBar />
-        <div className="px-10 py-5 md:py-20 md:px-48 bg-slate-700 grid grid-cols-1 lg:grid-cols-2 gap-x-16 gap-y-4">
-          <MovieCard />
-          <MovieCard />
-          <MovieCard />
-          <MovieCard />
-          <MovieCard />
-          <MovieCard />
-        </div>
+        <Routes>
+          {/* <Route path="/" element={<Login />}></Route> */}
+          <Route path="/dashboard" element={<Dashboard />}></Route>
+          <Route path="/add-genre" element={<AddGenre />}></Route>
+        </Routes>
       </div>
-
-      {/* <Routes>
-        <Route path="/" element={<Login />}></Route>
-        <Route path="/home" element={<Home />}></Route>
-      </Routes> */}
     </>
   );
 }

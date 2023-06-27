@@ -1,15 +1,25 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { HiMenuAlt3 } from "react-icons/hi";
-import { MdDashboard, MdAddBox, MdFormatListBulletedAdd } from "react-icons/md";
+import {
+  MdDashboard,
+  MdAddBox,
+  MdFormatListBulletedAdd,
+  MdLogout,
+} from "react-icons/md";
 import { Link } from "react-router-dom";
 
 const SideBar = () => {
   const [isOpen, setIsOpen] = useState(true);
   const menus = [
-    { name: "Dashboard", link: "/", icon: MdDashboard },
-    { name: "Add Movie", link: "/", icon: MdFormatListBulletedAdd },
-    { name: "Add Genre", link: "/", icon: MdAddBox },
+    { name: "Dashboard", link: "/dashboard", icon: MdDashboard },
+    { name: "Add Movies", link: "/add-movies", icon: MdFormatListBulletedAdd },
+    { name: "Add Genre", link: "/add-genre", icon: MdAddBox },
+    { name: "Logout", link: "/logout", icon: MdLogout },
   ];
+
+  useEffect(() => {
+    window.innerWidth <= 769 && setIsOpen(false);
+  }, [window.innerWidth]);
 
   const handleIsOpen = () => {
     setIsOpen((prev) => !isOpen);
@@ -33,9 +43,21 @@ const SideBar = () => {
           <Link
             to={menu?.link}
             key={index}
-            className="flex items-center text-sm gap-3.5 font-medium p-2 hover:bg-gray-800 rounded-md"
+            className="flex items-center text-sm gap-3.5 font-medium p-2 hover:bg-violet-800 rounded-md"
           >
-            <div>{React.createElement(menu?.icon, { size: "20" })}</div>
+            <div class="group relative">
+              <div>
+                {React.createElement(menu?.icon, {
+                  size: "20",
+                })}
+              </div>
+              {!isOpen && (
+                <span class="absolute -top-0.5 left-12 scale-0 rounded bg-white p-2 text-xs text-gray-800 group-hover:scale-100 w-[85px]">
+                  {menu?.name}
+                </span>
+              )}
+            </div>
+
             <h2
               style={{ transitionDelay: `${index * 3}00ms` }}
               className={`whitespace-pre duration-500 ${

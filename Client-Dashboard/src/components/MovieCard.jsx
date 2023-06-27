@@ -7,7 +7,7 @@ const MovieCard = () => {
       <img
         src="https://images.unsplash.com/photo-1593642532744-d377ab507dc8"
         alt="Laptop on Desk"
-        className="md:w-1/3 rounded-t-2xl md:rounded-l-2xl md:rounded-t-none aspect-auto"
+        className="md:w-1/3 rounded-t-2xl md:rounded-l-2xl md:rounded-t-none md:rounded-tl-2xl"
       />
       <div className="px-5 py-10 text-gray-600">
         <h2 className="font-bold text-xl sm:text-lg md:text-3xl mb-3">
