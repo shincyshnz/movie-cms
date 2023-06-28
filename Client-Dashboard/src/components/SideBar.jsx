@@ -45,14 +45,14 @@ const SideBar = () => {
             key={index}
             className="flex items-center text-sm gap-3.5 font-medium p-2 hover:bg-violet-800 rounded-md"
           >
-            <div class="group relative">
+            <div className="group relative">
               <div>
                 {React.createElement(menu?.icon, {
                   size: "20",
                 })}
               </div>
               {!isOpen && (
-                <span class="absolute -top-0.5 left-12 scale-0 rounded bg-white p-2 text-xs text-gray-800 group-hover:scale-100 w-[85px]">
+                <span className="absolute -top-0.5 left-12 scale-0 rounded bg-white p-2 text-xs text-gray-800 group-hover:scale-100 w-[85px]">
                   {menu?.name}
                 </span>
               )}

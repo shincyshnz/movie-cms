@@ -5,6 +5,7 @@ import SideBar from "./components/SideBar";
 import { Route, Routes } from "react-router-dom";
 import Dashboard from "./Pages/Dashboard";
 import AddGenre from "./Pages/AddGenre";
+import AddMovies from "./Pages/AddMovies";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -18,6 +19,7 @@ function App() {
           {/* <Route path="/" element={<Login />}></Route> */}
           <Route path="/dashboard" element={<Dashboard />}></Route>
           <Route path="/add-genre" element={<AddGenre />}></Route>
+          <Route path="/add-movies" element={<AddMovies />}></Route>
         </Routes>
       </div>
     </>
