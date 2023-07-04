@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useError } from "../context/ErrorContext";
 import Error from "../components/Error";
 import axios from "axios";
@@ -6,25 +6,28 @@ import Genre from "../components/Genre";
 
 const AddGenre = () => {
   const [genre, setGenre] = useState("");
+  const [isEdit, setIsEdit] = useState("");
+  const inputRef = useRef(null);
   const [genreList, setGenreList] = useState([]);
-  const { errorObj, handleErrorObj } = useError();
+  const { errorObj, handleErrorObj, deleteErrorObj } = useError();
+
+  useEffect(() => {
+    inputRef.current.focus();
+    // Fetch genre data
+    fetchGenre();
+  }, []);
 
   const fetchGenre = async () => {
     try {
       const response = await axios.get(import.meta.env.VITE_GENRE_URL);
       setGenreList(response?.data);
     } catch (error) {
-      handleErrorObj("apiError", error.message);
+      console.log(error);
     }
   };
 
-  useEffect(() => {
-    // Fetch genre data
-    fetchGenre();
-  }, []);
-
   const handleChange = (event) => {
-    delete errorObj.genreInputText;
+    deleteErrorObj("genreInputText");
     const { value } = event.target;
 
     if (value.length == 0) {
@@ -33,31 +36,93 @@ const AddGenre = () => {
     setGenre(value);
   };
 
-  const handleEdit = () => {};
-  const handleDelete = (e, _id) => {
-    e.preventDefault();
-  };
-
   const handleSubmit = async (event) => {
-    delete errorObj.apiError;
     event.preventDefault();
 
     try {
-      const genreId = await axios.post(import.meta.env.VITE_GENRE_URL, {
+      const response = await axios(import.meta.env.VITE_GENRE_URL, {
         method: "POST",
         data: {
-          name: genre,
+          name: genre.toLowerCase(),
         },
       });
 
-      if (!genreId) return;
+      if (!response) return;
 
       const newGenre = {
-        _id: genreId,
+        _id: response.data,
         name: genre,
       };
       setGenreList((prev) => [...prev, newGenre]);
       setGenre("");
+    } catch (error) {
+      handleErrorObj("apiError", error.message);
+    }
+  };
+
+  const handleEdit = async (e, _id) => {
+    e.preventDefault();
+    setIsEdit(_id);
+
+    setGenre((prev) => {
+      const findGenre = genreList.filter((genre) => genre._id === _id);
+      if (findGenre.length > 0) {
+        return (prev = findGenre[0]?.name);
+      }
+    });
+
+    inputRef.current.focus();
+    inputRef.current.value = genre;
+  };
+
+  const handleSave = async (event) => {
+    event.preventDefault();
+
+    const response = await axios(import.meta.env.VITE_GENRE_URL, {
+      method: "PUT",
+      data: {
+        _id: isEdit,
+        name: genre,
+      },
+    });
+
+    if (!response) return;
+
+    const newGenreList = genreList;
+    newGenreList.map((item) => {
+      if (item._id === isEdit) {
+        item.name = genre;
+      }
+      return [...genreList];
+    });
+    setGenreList(newGenreList);
+
+    setGenre("");
+    setIsEdit("");
+  };
+
+  const handleDelete = async (e, _id) => {
+    e.preventDefault();
+    let newGenreList = [];
+
+    try {
+      const response = await axios(import.meta.env.VITE_GENRE_URL, {
+        method: "DELETE",
+        data: {
+          _id: _id,
+        },
+      });
+
+      if (!response) return;
+
+      genreList.map((genre, index) => {
+        if (genre._id === _id) {
+          newGenreList = genreList
+            .splice(0, index)
+            .concat(genreList.splice(index + 1));
+        }
+      });
+      setGenreList(newGenreList);
     } catch (error) {
       handleErrorObj("apiError", error.message);
     }
@@ -69,18 +134,32 @@ const AddGenre = () => {
         <input
           type="text"
           value={genre}
+          ref={inputRef}
           className="p-2 rounded-lg focus:outline-violet-800 mr-2 w-full h-12 text-gray-900"
           placeholder="Enter Genre"
           onChange={handleChange}
         />
-        <button
-          className="bg-violet-800 h-12 p-2 rounded-lg"
-          onClick={handleSubmit}
-        >
-          Submit
-        </button>
+        {!isEdit ? (
+          <button
+            className="bg-violet-800 h-12 p-2 rounded-lg"
+            onClick={handleSubmit}
+          >
+            Submit
+          </button>
+        ) : (
+          <button
+            className="bg-violet-800 h-12 p-2 rounded-lg"
+            onClick={handleSave}
+          >
+            Save
+          </button>
+        )}
       </div>
-      {errorObj?.genreInputText && <Error errorKey="genreInputText" />}
+      {errorObj?.map((err, index) => {
+        return (
+          err.genreInputText && <Error errorKey="genreInputText" key={index} />
+        );
+      })}
       {errorObj?.apiError && <Error errorKey="apiError" />}
       <div className="border  border-gray-700 border-b-2 mb-8"></div>
       <Genre
