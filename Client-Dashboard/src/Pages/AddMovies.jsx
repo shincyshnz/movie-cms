@@ -4,14 +4,14 @@ import { useError } from "../context/ErrorContext";
 import Error from "../components/Error";
 
 const AddMovies = () => {
-  const [ratings, setRatings] = useState(0);
   const [genreList, setGenreList] = useState([]);
+  const [file,setFile] = useState();
   const { errorObj, deleteErrorObj, handleErrorObj } = useError();
   const [formFields, setFormFields] = useState({
     title: "",
     uploaded_file: "",
-    rating: "",
-    genre: [],
+    rating:0,
+    genres: [],
   });
 
   useEffect(() => {
@@ -27,6 +27,19 @@ const AddMovies = () => {
     }
   };
 
+  const handleFormFields = (itemKey, itemVal) => {
+    setFormFields((prev) => ({
+      ...prev,
+      [itemKey]: itemVal,
+    }));
+  };
+
+  const handleFile=(event)=>{
+    event.preventDefault();
+    setFile(URL.createObjectURL(event.target?.files[0]));
+    handleFormFields("uploaded_file",event.target?.files[0]);
+  }
+  
   const handleChange = (event) => {
     deleteErrorObj("title");
 
@@ -35,11 +48,33 @@ const AddMovies = () => {
     if (value.length === 0) {
       handleErrorObj("title", "Title Cannot be empty");
     }
-    setFormFields((prev) => ({
-      ...prev,
-      title: value,
-    }));
+
+    handleFormFields("title", value);
   };
+
+  const handleCheckBox = (event) => {
+    deleteErrorObj("genres");
+
+    const genreItem = event.target.value;
+    let genresArr = [...formFields.genres];
+
+    (event.target.checked) ? (genresArr = [...formFields.genres,genreItem]) : genresArr.splice(genresArr.indexOf(genreItem),1) ;
+   
+    if (genresArr.length === 0) {
+      handleErrorObj("genres", "Genres Cannot be empty");
+    }
+
+    handleFormFields("genres", genresArr);
+  };
+
+  const handleRatings = (event) => {
+    const rating = event.target.value;
+
+    handleFormFields("rating", rating);
+  };
+
+  console.log(formFields);
+  console.log(errorObj);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -54,8 +89,9 @@ const AddMovies = () => {
             htmlFor="dropzone-file"
             className="flex flex-col items-center justify-center w-full h-64 border-2 border-dashed rounded-lg cursor-pointer bg-white  border-white-600 hover:border-gray-100 hover:bg-gray-200"
           >
-            <div className="flex flex-col items-center justify-center pt-5 pb-6">
-              <svg
+            <div className="flex flex-col items-center justify-center">
+              {(!file) ? (<div className="flex flex-col items-center justify-center pt-5 pb-6">
+                <svg
                 aria-hidden="true"
                 className="w-10 h-10 mb-3 text-gray-400"
                 fill="none"
@@ -77,12 +113,14 @@ const AddMovies = () => {
               <p className="text-xs text-gray-400 dark:text-gray-400">
                 SVG, PNG, JPG or GIF (MAX. 800x400px)
               </p>
+              </div>) : (<img src={file}></img>)}
             </div>
             <input
               id="dropzone-file"
               type="file"
               name="uploaded_file"
               className="hidden"
+              onChange={handleFile}
             />
           </label>
         </div>
@@ -108,8 +146,7 @@ const AddMovies = () => {
             return err.title && <Error errorKey="title" key={index} />;
           })}
         </div>
-        {/* {errorObj?.apiError && <Error errorKey="apiError" />} */}
-        {/* Input Slider */}
+       
         <div className="group relative mb-4">
           <label
             htmlFor="default-range"
@@ -121,12 +158,12 @@ const AddMovies = () => {
             id="default-range"
             type="range"
             name="rating"
+            value={formFields.rating}
             min="1"
             max="5"
-            value={ratings}
             step="1"
             marks="true"
-            onChange={(e) => setRatings(e.target.value)}
+            onChange={handleRatings}
             className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-violet-800"
           />
           <div className="w-full flex justify-between text-xs px-2">
@@ -147,6 +184,7 @@ const AddMovies = () => {
                   name="genre"
                   type="checkbox"
                   value={genre._id}
+                  onChange={handleCheckBox}
                   className="w-4 h-4 bg-gray-100 rounded-lg accent-violet-800"
                 />
                 <label
@@ -161,8 +199,14 @@ const AddMovies = () => {
               </div>
             );
           })}
+          {errorObj?.map((err, index) => {
+            return err.genres && <Error errorKey="genres" key={index} />;
+          })}
         </div>
       </form>
+      {errorObj?.map((err, index) => {
+            return err.title && <Error errorKey="apiError" key={index} />;
+          })}
       {/* Submit */}
       <button className="mt-12 bg-violet-800 w-full text-white p-2 rounded-lg">
         Submit
