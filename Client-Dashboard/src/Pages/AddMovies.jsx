@@ -2,17 +2,20 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useError } from "../context/ErrorContext";
 import Error from "../components/Error";
+import { Toast } from "bootstrap";
 
 const AddMovies = () => {
   const [genreList, setGenreList] = useState([]);
-  const [file,setFile] = useState();
+  const { loading, setLoading } = useState(false);
+  const [file, setFile] = useState();
   const { errorObj, deleteErrorObj, handleErrorObj } = useError();
-  const [formFields, setFormFields] = useState({
+  const initialFormFields = {
     title: "",
-    uploaded_file: "",
-    rating:0,
+    movieImage: "",
+    rating: 0,
     genres: [],
-  });
+  };
+  const [formFields, setFormFields] = useState(initialFormFields);
 
   useEffect(() => {
     fetchGenre();
@@ -34,12 +37,12 @@ const AddMovies = () => {
     }));
   };
 
-  const handleFile=(event)=>{
+  const handleFile = (event) => {
     event.preventDefault();
     setFile(URL.createObjectURL(event.target?.files[0]));
-    handleFormFields("uploaded_file",event.target?.files[0]);
-  }
-  
+    handleFormFields("movieImage", event.target?.files[0]);
+  };
+
   const handleChange = (event) => {
     deleteErrorObj("title");
 
@@ -58,8 +61,10 @@ const AddMovies = () => {
     const genreItem = event.target.value;
     let genresArr = [...formFields.genres];
 
-    (event.target.checked) ? (genresArr = [...formFields.genres,genreItem]) : genresArr.splice(genresArr.indexOf(genreItem),1) ;
-   
+    event.target.checked
+      ? (genresArr = [...formFields.genres, genreItem])
+      : genresArr.splice(genresArr.indexOf(genreItem), 1);
+
     if (genresArr.length === 0) {
       handleErrorObj("genres", "Genres Cannot be empty");
     }
@@ -73,11 +78,38 @@ const AddMovies = () => {
     handleFormFields("rating", rating);
   };
 
-  console.log(formFields);
-  console.log(errorObj);
-
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
+    setLoading(true);
+
+    try {
+      if (!formFields.title) return;
+
+      const formData = new FormData();
+      formData.append("movieImage", formFields.movieImage);
+      formData.append("title", formFields.title);
+      formData.append("rating", formFields.rating);
+      formData.append("genres", formFields.genres);
+
+      const response = await axios(import.meta.env.VITE_MOVIES_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+        data: formData,
+      });
+      console.log(response);
+      if (!response) return;
+      setFormFields(initialFormFields);
+    } catch (error) {
+      deleteErrorObj("apiError");
+      handleErrorObj(
+        "apiError",
+        `${error.message} : Error while submitting movie data`
+      );
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -89,36 +121,38 @@ const AddMovies = () => {
             htmlFor="dropzone-file"
             className="flex flex-col items-center justify-center w-full h-64 border-2 border-dashed rounded-lg cursor-pointer bg-white  border-white-600 hover:border-gray-100 hover:bg-gray-200"
           >
-            <div className="flex flex-col items-center justify-center">
-              {(!file) ? (<div className="flex flex-col items-center justify-center pt-5 pb-6">
+            {!file ? (
+              <div className="flex flex-col items-center justify-center pt-5 pb-6">
                 <svg
-                aria-hidden="true"
-                className="w-10 h-10 mb-3 text-gray-400"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
-                ></path>
-              </svg>
-              <p className="mb-2 text-sm text-gray-400">
-                <span className="font-semibold">Click to upload</span> or drag
-                and drop
-              </p>
-              <p className="text-xs text-gray-400 dark:text-gray-400">
-                SVG, PNG, JPG or GIF (MAX. 800x400px)
-              </p>
-              </div>) : (<img src={file}></img>)}
-            </div>
+                  aria-hidden="true"
+                  className="w-10 h-10 mb-3 text-gray-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
+                  ></path>
+                </svg>
+                <p className="mb-2 text-sm text-gray-400">
+                  <span className="font-semibold">Click to upload</span> or drag
+                  and drop
+                </p>
+                <p className="text-xs text-gray-400 dark:text-gray-400">
+                  SVG, PNG, JPG or GIF (MAX. 800x400px)
+                </p>
+              </div>
+            ) : (
+              <img src={file} className="overflow-hidden object-contain" />
+            )}
             <input
               id="dropzone-file"
               type="file"
-              name="uploaded_file"
+              name="movieImage"
               className="hidden"
               onChange={handleFile}
             />
@@ -146,7 +180,7 @@ const AddMovies = () => {
             return err.title && <Error errorKey="title" key={index} />;
           })}
         </div>
-       
+
         <div className="group relative mb-4">
           <label
             htmlFor="default-range"
@@ -205,13 +239,17 @@ const AddMovies = () => {
         </div>
       </form>
       {errorObj?.map((err, index) => {
-            return err.title && <Error errorKey="apiError" key={index} />;
-          })}
+        return err.apiError && <Error errorKey="apiError" key={index} />;
+      })}
       {/* Submit */}
-      <button className="mt-12 bg-violet-800 w-full text-white p-2 rounded-lg">
+      <button
+        onClick={handleSubmit}
+        className="mt-12 bg-violet-800 w-full text-white p-2 rounded-lg"
+      >
         Submit
       </button>
     </div>
+    
   );
 };
 

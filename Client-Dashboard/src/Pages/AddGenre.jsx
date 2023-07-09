@@ -22,7 +22,8 @@ const AddGenre = () => {
       const response = await axios.get(import.meta.env.VITE_GENRE_URL);
       setGenreList(response?.data);
     } catch (error) {
-      console.log(error);
+      deleteErrorObj("apiError");
+      handleErrorObj("apiError", `${error.message} : Error fetching genre`);
     }
   };
 
@@ -56,11 +57,12 @@ const AddGenre = () => {
       setGenreList((prev) => [...prev, newGenre]);
       setGenre("");
     } catch (error) {
-      handleErrorObj("apiError", error.message);
+      deleteErrorObj("apiError");
+      handleErrorObj("apiError", `${error.message} : Error while submitting genre data`);
     }
   };
 
-  const handleEdit = async (e, _id) => {
+  const handleEdit = (e, _id) => {
     e.preventDefault();
     setIsEdit(_id);
 
@@ -78,7 +80,8 @@ const AddGenre = () => {
   const handleSave = async (event) => {
     event.preventDefault();
 
-    const response = await axios(import.meta.env.VITE_GENRE_URL, {
+    try {
+      const response = await axios(import.meta.env.VITE_GENRE_URL, {
       method: "PUT",
       data: {
         _id: isEdit,
@@ -99,6 +102,9 @@ const AddGenre = () => {
 
     setGenre("");
     setIsEdit("");
+  }catch(error){
+    deleteErrorObj("apiError");
+    handleErrorObj("apiError", `${error.message} : Error while editing genre data`);}
   };
 
   const handleDelete = async (e, _id) => {
@@ -124,7 +130,8 @@ const AddGenre = () => {
       });
       setGenreList(newGenreList);
     } catch (error) {
-      handleErrorObj("apiError", error.message);
+      deleteErrorObj("apiError");
+      handleErrorObj("apiError", `${error.message} : Error while deleting genre data`);
     }
   };
 
@@ -160,7 +167,9 @@ const AddGenre = () => {
           err.genreInputText && <Error errorKey="genreInputText" key={index} />
         );
       })}
-      {errorObj?.apiError && <Error errorKey="apiError" />}
+      {errorObj?.map((err, index) => {
+            return err.apiError && <Error errorKey="apiError" key={index} />;
+          })}
       <div className="border  border-gray-700 border-b-2 mb-8"></div>
       <Genre
         genreList={genreList}
