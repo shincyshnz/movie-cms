@@ -1,13 +1,15 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useError } from "../context/ErrorContext";
 import Error from "../components/Error";
-import { Toast } from "bootstrap";
+import { ToastContainer, toast } from "react-toastify";
+
+import "react-toastify/dist/ReactToastify.css";
 
 const AddMovies = () => {
+  const checkboxRef = useRef(null);
   const [genreList, setGenreList] = useState([]);
-  const { loading, setLoading } = useState(false);
-  const [file, setFile] = useState();
+  const [file, setFile] = useState(null);
   const { errorObj, deleteErrorObj, handleErrorObj } = useError();
   const initialFormFields = {
     title: "",
@@ -55,6 +57,13 @@ const AddMovies = () => {
     handleFormFields("title", value);
   };
 
+  const uncheck = () => {
+    const inputParents = checkboxRef.current.children;
+    [...inputParents].forEach(element => {
+      element.firstChild.checked=false;
+    });
+  };
+
   const handleCheckBox = (event) => {
     deleteErrorObj("genres");
 
@@ -80,7 +89,7 @@ const AddMovies = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    setLoading(true);
+    const toastId = toast.loading("Please Wait...");
 
     try {
       if (!formFields.title) return;
@@ -98,17 +107,25 @@ const AddMovies = () => {
         },
         data: formData,
       });
-      console.log(response);
+
       if (!response) return;
+
       setFormFields(initialFormFields);
+      setFile(null);
+      uncheck();
+
+      toast.update(toastId, {
+        render: "Uploaded Succesfully...",
+        type: "success",
+        isLoading: false,
+        autoClose: 3000,
+      });
     } catch (error) {
       deleteErrorObj("apiError");
       handleErrorObj(
         "apiError",
         `${error.message} : Error while submitting movie data`
       );
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -209,12 +226,15 @@ const AddMovies = () => {
           </div>
         </div>
         {/* Checkboxes */}
-        <div className="flex flex-wrap mb-4 gap-y-4">
+        <div className="flex flex-wrap mb-4 gap-y-4" ref={checkboxRef}>
           {genreList?.map((genre, index) => {
             return (
-              <div className="flex items-center mr-4" key={index}>
+              <div
+                className="flex items-center mr-4"
+                key={index}
+              >
                 <input
-                  id="inline-checkbox"
+                  id={`inline-checkbox-${index}`}
                   name="genre"
                   type="checkbox"
                   value={genre._id}
@@ -248,8 +268,20 @@ const AddMovies = () => {
       >
         Submit
       </button>
+
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
+      />
     </div>
-    
   );
 };
 

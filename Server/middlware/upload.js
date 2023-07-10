@@ -25,7 +25,6 @@ const handler = async (req, res,next) => {
         res.locals.movieImageData = cldRes;
         next();
     } catch (error) {
-        console.log(error);
         res.send({
             message: error.message,
         });

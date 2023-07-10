@@ -5,7 +5,9 @@ const genre = async (req, res) => {
         const genreList = await genreModel.find().select("_id name");
         res.json(genreList);
     } catch (error) {
-        console.log(error);
+        res.json({
+            message: error.message,
+        })
     }
 };
 
@@ -15,7 +17,9 @@ const addGenre = async (req, res) => {
         const data = await genreModel.create({ name: name });
         res.json(data._id);
     } catch (error) {
-        console.log(error);
+        res.json({
+            message: error.message,
+        })
     }
 };
 
@@ -25,7 +29,9 @@ const editGenre = async (req, res) => {
         const data = await genreModel.findOneAndUpdate({ _id }, { name }, { new: true });
         res.json(data);
     } catch (error) {
-        console.log(error);
+        res.json({
+            message: error.message,
+        })
     }
 };
 
@@ -35,7 +41,9 @@ const deleteGenre = async (req, res) => {
         const data = await genreModel.findByIdAndDelete(_id);
         res.json(data._id);
     } catch (error) {
-        console.log(error);
+        res.json({
+            message: error.message,
+        })
     }
 };
 
