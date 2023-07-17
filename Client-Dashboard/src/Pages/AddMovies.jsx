@@ -6,6 +6,7 @@ import { ToastContainer, toast } from "react-toastify";
 
 import "react-toastify/dist/ReactToastify.css";
 
+
 const AddMovies = () => {
   const checkboxRef = useRef(null);
   const [genreList, setGenreList] = useState([]);
@@ -89,10 +90,14 @@ const AddMovies = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const toastId = toast.loading("Please Wait...");
 
     try {
-      if (!formFields.title) return;
+      if (!formFields.title) {
+        deleteErrorObj("title");
+        handleErrorObj("title", "Title Cannot be empty");
+        return;
+      };
+      const toastId = toast.loading("Please Wait...");
 
       const formData = new FormData();
       formData.append("movieImage", formFields.movieImage);
@@ -107,7 +112,6 @@ const AddMovies = () => {
         },
         data: formData,
       });
-
       if (!response) return;
 
       setFormFields(initialFormFields);
@@ -124,7 +128,7 @@ const AddMovies = () => {
       deleteErrorObj("apiError");
       handleErrorObj(
         "apiError",
-        `${error.message} : Error while submitting movie data`
+        `${error.message} ${error.response?.data.message}  : Error while submitting movie data`
       );
     }
   };
@@ -172,6 +176,7 @@ const AddMovies = () => {
               name="movieImage"
               className="hidden"
               onChange={handleFile}
+              required
             />
           </label>
         </div>

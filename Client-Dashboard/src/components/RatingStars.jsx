@@ -20,7 +20,7 @@ const RatingStars = ({ rating }) => {
 
   return (
     <div>
-      <div className="flex items-center">
+      <div className="flex items-center mb-4">
         {[...Array(5)].map((e, i) => {
           return rating >= i + 1
             ? renderStar("text-yellow-400",i)

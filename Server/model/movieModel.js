@@ -13,9 +13,10 @@ const movieSchema = mongoose.Schema({
     rating: {
         type: Number
     },
-    genres: {
-        type:String
-    },
+    genres: [{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"Genre"
+    }],
 }, { timestamps: true });
 
 module.exports = mongoose.model("Movies",movieSchema);

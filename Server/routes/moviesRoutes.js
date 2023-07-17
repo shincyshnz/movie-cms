@@ -4,6 +4,7 @@ const { handler } = require("../middlware/upload");
 const router = express.Router();
 
 router.get("/",movies);
+// router.post("/",addMovies);
 router.post("/",handler,addMovies);
 
 module.exports = router;
