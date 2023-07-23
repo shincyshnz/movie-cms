@@ -1,10 +1,11 @@
 const express = require("express");
-const {movies,addMovies} = require("../controller/MovieController");
-const { handler } = require("../middlware/upload");
+const { movieById, movies, addMovies, editMovies } = require("../controller/MovieController");
+const { handler,handlerEdit } = require("../middlware/upload");
 const router = express.Router();
 
-router.get("/",movies);
-// router.post("/",addMovies);
-router.post("/",handler,addMovies);
+router.get("/:id", movieById);
+router.get("/", movies);
+router.post("/", handler, addMovies);
+// router.put("/",handlerEdit, editMovies);
 
 module.exports = router;

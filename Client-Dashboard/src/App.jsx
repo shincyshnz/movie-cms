@@ -19,7 +19,7 @@ function App() {
           {/* <Route path="/" element={<Login />}></Route> */}
           <Route path="/dashboard" element={<Dashboard />}></Route>
           <Route path="/add-genre" element={<AddGenre />}></Route>
-          <Route path="/add-movies" element={<AddMovies />}></Route>
+          <Route path="/add-movies/:id?" element={<AddMovies />}></Route>
         </Routes>
       </div>
     </>

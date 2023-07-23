@@ -5,12 +5,14 @@ import Error from "../components/Error";
 import { ToastContainer, toast } from "react-toastify";
 
 import "react-toastify/dist/ReactToastify.css";
-
+import { useParams } from "react-router-dom";
 
 const AddMovies = () => {
   const checkboxRef = useRef(null);
   const [genreList, setGenreList] = useState([]);
   const [file, setFile] = useState(null);
+  const [cloudId, setCloudId] = useState("");
+  const [isChangedFile, setIsChangedFile] = useState(false);
   const { errorObj, deleteErrorObj, handleErrorObj } = useError();
   const initialFormFields = {
     title: "",
@@ -19,12 +21,40 @@ const AddMovies = () => {
     genres: [],
   };
   const [formFields, setFormFields] = useState(initialFormFields);
+  const { id } = useParams();
 
   useEffect(() => {
-    fetchGenre();
+    fetchGenres();
+    if (id) {
+      getMovieByID(id);
+    }
   }, []);
 
-  const fetchGenre = async () => {
+  const getMovieByID = async (id) => {
+    try {
+      const response = await axios(`${import.meta.env.VITE_MOVIES_URL}/${id}`);
+      const { title, url, rating, genres, cloudinaryID } = response.data;
+      handleFormFields("title", title);
+      handleFormFields("movieImage", url);
+      setFile(url);
+      handleFormFields("rating", rating);
+      handleFormFields("genres", genres);
+      setCloudId(cloudinaryID);
+
+      // make checkbox checked for id in genres
+      const checkBoxParents = checkboxRef.current.children;
+      [...checkBoxParents].forEach((element) => {
+        genres.forEach((genre) => {
+          if (element.firstChild.value === genre)
+            element.firstChild.checked = true;
+        });
+      });
+    } catch (error) {
+      handleErrorObj("apiError", error.message);
+    }
+  };
+
+  const fetchGenres = async () => {
     try {
       const response = await axios(import.meta.env.VITE_GENRE_URL);
       setGenreList(response.data);
@@ -42,6 +72,10 @@ const AddMovies = () => {
 
   const handleFile = (event) => {
     event.preventDefault();
+
+    if (id) {
+      setIsChangedFile(true);
+    }
     setFile(URL.createObjectURL(event.target?.files[0]));
     handleFormFields("movieImage", event.target?.files[0]);
   };
@@ -59,9 +93,9 @@ const AddMovies = () => {
   };
 
   const uncheck = () => {
-    const inputParents = checkboxRef.current.children;
-    [...inputParents].forEach(element => {
-      element.firstChild.checked=false;
+    const checkBoxParents = checkboxRef.current.children;
+    [...checkBoxParents].forEach((element) => {
+      element.firstChild.checked = false;
     });
   };
 
@@ -96,7 +130,7 @@ const AddMovies = () => {
         deleteErrorObj("title");
         handleErrorObj("title", "Title Cannot be empty");
         return;
-      };
+      }
       const toastId = toast.loading("Please Wait...");
 
       const formData = new FormData();
@@ -105,13 +139,19 @@ const AddMovies = () => {
       formData.append("rating", formFields.rating);
       formData.append("genres", formFields.genres);
 
+      const method = id ? "PUT" : "POST";
+      if (isChangedFile) {
+        formData.append("cloudinaryId", cloudId);
+      }
+      
       const response = await axios(import.meta.env.VITE_MOVIES_URL, {
-        method: "POST",
+        method: method,
         headers: {
           "Content-Type": "multipart/form-data",
         },
         data: formData,
       });
+
       if (!response) return;
 
       setFormFields(initialFormFields);
@@ -234,10 +274,7 @@ const AddMovies = () => {
         <div className="flex flex-wrap mb-4 gap-y-4" ref={checkboxRef}>
           {genreList?.map((genre, index) => {
             return (
-              <div
-                className="flex items-center mr-4"
-                key={index}
-              >
+              <div className="flex items-center mr-4" key={index}>
                 <input
                   id={`inline-checkbox-${index}`}
                   name="genre"
@@ -271,7 +308,7 @@ const AddMovies = () => {
         onClick={handleSubmit}
         className="mt-12 bg-violet-800 w-full text-white p-2 rounded-lg"
       >
-        Submit
+        {id ? "Save" : "Submit"}
       </button>
 
       <ToastContainer

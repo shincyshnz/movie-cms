@@ -1,8 +1,18 @@
 import React from "react";
 import RatingStars from "./RatingStars";
 import { MdDeleteOutline, MdModeEditOutline } from "react-icons/md";
+import { useNavigate } from "react-router-dom";
+
 const MovieCard = ({ movie }) => {
-  const { title, rating, genres, url } = movie;
+  const navigate = useNavigate();
+  const { _id, title, rating, genres, url } = movie;
+
+  const handleEdit = () => {
+    navigate(`/add-movies/${_id}`);
+  };
+
+  const handleDelete = () => {};
+
 
   return (
     <div className="bg-slate-900 rounded-2xl md:flex">
@@ -21,19 +31,30 @@ const MovieCard = ({ movie }) => {
         </p>
 
         <div className="flex gap-2 flex-wrap mb-4">
-        {genres.map((genre) => {
-          return (
-              <div className="bg-transparent min-w-max text-gray-400 font-semibold py-2 px-4 border border-gray-400 rounded-2xl text-xs w-min">
+          {genres.map((genre, index) => {
+            return (
+              <div
+                key={index}
+                className="bg-transparent min-w-max text-gray-400 font-semibold py-2 px-4 border border-gray-400 rounded-2xl text-xs w-min"
+              >
                 {genre.name}
               </div>
-          );
-        })}
+            );
+          })}
         </div>
 
         <RatingStars rating={rating} />
         <div className="flex gap-2 flex-wrap text-gray-400 justify-end px-5 text-2xl">
-          <MdModeEditOutline className="hover:opacity-70 cursor-pointer" />
-          <MdDeleteOutline className="hover:opacity-70 cursor-pointer" />
+          <MdModeEditOutline
+            className="hover:opacity-70 cursor-pointer"
+            id={_id}
+            onClick={handleEdit}
+          />
+          <MdDeleteOutline
+            className="hover:opacity-70 cursor-pointer"
+            id={_id}
+            onClick={handleDelete}
+          />
         </div>
       </div>
     </div>

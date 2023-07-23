@@ -1,5 +1,5 @@
 const multer = require('multer');
-const { handleUpload } = require("../config/cloudinary");
+const { handleUpload, handleDelete } = require("../config/cloudinary");
 const movieModel = require('../model/movieModel');
 
 const storage = multer.memoryStorage();
@@ -19,17 +19,51 @@ function runMiddleware(req, res, fn) {
 
 const handler = async (req, res, next) => {
   try {
+    // Creating new movie file
     // Checking for already existing movie name
     const isExists = await movieModel.findOne({ title: req.body.title });
     if (isExists) {
       throw new Error("The Movie already exists!");
     }
+    //Upload new image 
     await runMiddleware(req, res, myUploadMiddleware);
     const b64 = Buffer.from(req.file.buffer).toString("base64");
     let dataURI = "data:" + req.file.mimetype + ";base64," + b64;
     const cldRes = await handleUpload(dataURI);
     res.locals.movieImageData = cldRes;
+
+    // if (req.body.cloudinaryId) {
+    //   await handleDelete(req.body.cloudinaryId);
+    //   //Upload new image 
+    //   await runMiddleware(req, res, myUploadMiddleware);
+    //   const b64 = Buffer.from(req.file.buffer).toString("base64");
+    //   let dataURI = "data:" + req.file.mimetype + ";base64," + b64;
+    //   const cldRes = await handleUpload(dataURI);
+    //   res.locals.movieImageData = cldRes;
+    // } 
     next();
+
+  } catch (error) {
+    res.status(400).json({
+      message: `${error.message}`,
+    });
+  }
+};
+
+const handlerEdit = async (req, res, next) => {
+  try {
+    console.log(req.body);
+    if (req.body.cloudinaryId) {
+      await handleDelete(req.body.cloudinaryId);
+      //Upload new image 
+      await runMiddleware(req, res, myUploadMiddleware);
+      const b64 = Buffer.from(req.file.buffer).toString("base64");
+      let dataURI = "data:" + req.file.mimetype + ";base64," + b64;
+      const cldRes = await handleUpload(dataURI);
+      res.locals.movieImageData = cldRes;
+    } 
+    next();
+
   } catch (error) {
     res.status(400).json({
       message: `${error.message}`,
@@ -44,4 +78,4 @@ const config = {
 };
 
 
-module.exports = { handler, config };
+module.exports = { handler, handlerEdit, config };
