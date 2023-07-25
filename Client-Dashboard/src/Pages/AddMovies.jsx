@@ -132,18 +132,23 @@ const AddMovies = () => {
         return;
       }
       const toastId = toast.loading("Please Wait...");
-
+      console.log(formFields);
       const formData = new FormData();
-      formData.append("movieImage", formFields.movieImage);
+      let method;
+
       formData.append("title", formFields.title);
       formData.append("rating", formFields.rating);
       formData.append("genres", formFields.genres);
 
-      const method = id ? "PUT" : "POST";
-      if (isChangedFile) {
-        formData.append("cloudinaryId", cloudId);
+      if (id) {
+        method = "PUT";
+        formData.append("movieId", id);
+        isChangedFile && formData.append("movieImage", formFields.movieImage);
+      }else{
+        method = "POST";
+        formData.append("movieImage", formFields.movieImage);
       }
-      
+
       const response = await axios(import.meta.env.VITE_MOVIES_URL, {
         method: method,
         headers: {

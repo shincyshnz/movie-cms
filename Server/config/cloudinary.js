@@ -14,9 +14,4 @@ async function handleUpload(file) {
     return res;
 };
 
-async function handleDelete(publicId) {
-    const res = await cloudinary.uploader.destroy(publicId);
-    return res;
-};
-
-module.exports = { handleUpload, handleDelete }
+module.exports = { handleUpload }

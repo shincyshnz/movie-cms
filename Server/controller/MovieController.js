@@ -29,13 +29,9 @@ const addMovies = async (req, res) => {
     try {
         const { title, rating, genres } = req.body;
         const genresArr = genres.split(",");
-        // const isExists = await movieModel.findOne({ title });
-        // if (isExists) {
-        //     throw new Error("The Movie already exists!");
-        // }
 
-        const movieImageUrl = res.locals.movieImageData.secure_url
-        await movieModel.create({ title, rating, genres: genresArr, url: movieImageUrl, cloudinaryID: res.locals.movieImageData.public_id });
+        const movieImageUrl = res.locals.movieImageData?.secure_url
+        await movieModel.create({ title, rating, genres: genresArr, url: movieImageUrl });
         res.json(movieImageUrl);
 
     } catch (error) {
@@ -45,18 +41,25 @@ const addMovies = async (req, res) => {
     }
 };
 
-const editMovies =  async (req, res) => {
+const editMovies = async (req, res) => {
     try {
+        let updatedMovie;
         const { movieId, title, rating, genres } = req.body;
         const genresArr = genres?.split(",");
 
-        // const movieImageUrl = res.locals.movieImageData?.secure_url
-        // const isExists = await movieModel.findByIdAndUpdate({ _id: movieId }, { $set: {title, rating, genres: genresArr, url: movieImageUrl, cloudinaryID: res.locals.movieImageData?.public_id } }, { new: true });
-        // if (!isExists) {
-        //     throw new Error("The Movie does not exists!");
-        // }
-        // res.json(isExists);
-        res.json(req.body);
+        updatedMovie = {
+            title: title,
+            rating: rating,
+            genres: genresArr,
+        };
+
+        if (res.locals.movieImageData) {
+            const movieImageUrl = res.locals.movieImageData?.secure_url;
+            updatedMovie.url = movieImageUrl;
+        }
+
+        const isExists = await movieModel.findByIdAndUpdate(movieId, updatedMovie, { new: true });
+        res.json(isExists);
     } catch (error) {
         res.status(400).json({
             message: error.message,
