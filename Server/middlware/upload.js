@@ -20,16 +20,23 @@ function runMiddleware(req, res, fn) {
 
 const handler = async (req, res, next) => {
   try {
-    // Checking for already existing movie name
-    // const isExists = await movieModel.findOne({ title: req.body.title });
-    // if (isExists) {
-    //   throw new Error("The Movie already exists!");
-    // }
-
     //Upload new image
     await runMiddleware(req, res, myUploadMiddleware);
     const buffer = req.file?.buffer;
     const mimetype = req.file?.mimetype;
+    const title = req.body.title;
+
+    // Checking for already existing movie name
+    if (req.method === "POST") {
+      const isExists = await movieModel.findOne({ title });
+      if (isExists) {
+        throw new Error("The Movie already exists!");
+      }
+
+      if (!buffer) {
+        throw new Error("Image cannot be empty!");
+      }
+    }
 
     if (buffer) {
       const b64 = buffer && buffer.toString("base64");
@@ -45,33 +52,6 @@ const handler = async (req, res, next) => {
     });
   }
 };
-
-// const handler = async (req, res, next) => {
-//   try {
-//     // Checking for already existing movie name
-//     // const isExists = await movieModel.findOne({ title: req.body.title });
-//     // if (isExists) {
-//     //   throw new Error("The Movie already exists!");
-//     // }
-
-//     //Upload new image
-//     await runMiddleware(req, res, myUploadMiddleware);
-//     const b64 = Buffer.from(req.file.buffer).toString("base64");
-//     let dataURI = "data:" + req.file.mimetype + ";base64," + b64;
-//     const cldRes = await handleUpload(dataURI);
-//     res.locals.movieImageData = cldRes;
-
-//     await runMiddleware(req, res, upload.none());
-
-
-//     next();
-//   } catch (error) {
-//     res.status(400).json({
-//       message: `${error.message}`,
-//     });
-//   }
-// };
-
 
 const config = {
   api: {

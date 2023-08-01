@@ -1,12 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import MovieCard from "../components/MovieCard";
 import axios from "axios";
 import { useError } from "../context/ErrorContext";
+import DeleteModal from "../components/DeleteModal";
 
 const Dashboard = () => {
   const { errorObj, handleErrorObj, deleteErrorObj } = useError();
 
   const [isLoading, setIsLoading] = useState(false);
+  const [isShowDeleteModal, setIsShowDeleteModal] = useState(false);
   const [movieList, setMovieList] = useState([]);
 
   useEffect(() => {
@@ -24,9 +26,13 @@ const Dashboard = () => {
         "apiError",
         `${error.message} : Error fetching movie details`
       );
-    }finally{
+    } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleDelete = (id) => {
+    console.log(id, "==clicked");
   };
 
   return (
@@ -42,9 +48,16 @@ const Dashboard = () => {
         </div>
       ) : (
         movieList.map((movie) => {
-          return <MovieCard key={movie._id} movie={movie} />;
+          return (
+            <MovieCard
+              key={movie._id}
+              movie={movie}
+              handleDelete={(e) => handleDelete(movie._id)}
+            />
+          );
         })
       )}
+
       {errorObj?.map((err, index) => {
         return err.apiError && <Error errorKey="apiError" key={index} />;
       })}

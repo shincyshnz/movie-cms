@@ -1,18 +1,15 @@
-import React from "react";
+import React, { Fragment, useState } from "react";
 import RatingStars from "./RatingStars";
 import { MdDeleteOutline, MdModeEditOutline } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 
-const MovieCard = ({ movie }) => {
+const MovieCard = ({ movie,handleDelete }) => {
   const navigate = useNavigate();
   const { _id, title, rating, genres, url } = movie;
 
   const handleEdit = () => {
     navigate(`/add-movies/${_id}`);
   };
-
-  const handleDelete = () => {};
-
 
   return (
     <div className="bg-slate-900 rounded-2xl md:flex">

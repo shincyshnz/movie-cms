@@ -11,7 +11,6 @@ const AddMovies = () => {
   const checkboxRef = useRef(null);
   const [genreList, setGenreList] = useState([]);
   const [file, setFile] = useState(null);
-  const [cloudId, setCloudId] = useState("");
   const [isChangedFile, setIsChangedFile] = useState(false);
   const { errorObj, deleteErrorObj, handleErrorObj } = useError();
   const initialFormFields = {
@@ -33,13 +32,12 @@ const AddMovies = () => {
   const getMovieByID = async (id) => {
     try {
       const response = await axios(`${import.meta.env.VITE_MOVIES_URL}/${id}`);
-      const { title, url, rating, genres, cloudinaryID } = response.data;
+      const { title, url, rating, genres } = response.data;
       handleFormFields("title", title);
       handleFormFields("movieImage", url);
       setFile(url);
       handleFormFields("rating", rating);
       handleFormFields("genres", genres);
-      setCloudId(cloudinaryID);
 
       // make checkbox checked for id in genres
       const checkBoxParents = checkboxRef.current.children;
@@ -81,6 +79,7 @@ const AddMovies = () => {
   };
 
   const handleChange = (event) => {
+    deleteErrorObj("apiError");
     deleteErrorObj("title");
 
     const { value } = event.target;
@@ -100,6 +99,7 @@ const AddMovies = () => {
   };
 
   const handleCheckBox = (event) => {
+    deleteErrorObj("apiError");
     deleteErrorObj("genres");
 
     const genreItem = event.target.value;
@@ -132,7 +132,6 @@ const AddMovies = () => {
         return;
       }
       const toastId = toast.loading("Please Wait...");
-      console.log(formFields);
       const formData = new FormData();
       let method;
 
@@ -170,11 +169,13 @@ const AddMovies = () => {
         autoClose: 3000,
       });
     } catch (error) {
-      deleteErrorObj("apiError");
+      toast.dismiss();
       handleErrorObj(
         "apiError",
         `${error.message} ${error.response?.data.message}  : Error while submitting movie data`
       );
+    }finally{
+      deleteErrorObj("apiError");
     }
   };
 
@@ -311,7 +312,7 @@ const AddMovies = () => {
       {/* Submit */}
       <button
         onClick={handleSubmit}
-        className="mt-12 bg-violet-800 w-full text-white p-2 rounded-lg"
+        className="mt-12 bg-violet-800 hover:bg-violet-950 w-full text-white p-2 rounded-lg"
       >
         {id ? "Save" : "Submit"}
       </button>
