@@ -4,7 +4,7 @@ TMDB is a web app built using React, Express and MongoDB. This app helps users t
 
 <video src="https://github.com/shincyshnz/movie-cms/Untitled.mp4" controls title="Title"></video>
 
-[<img src="https://i.ytimg.com/vi/Hc79sDi3f0U/maxresdefault.jpg" width="50%">](https://www.youtube.com/watch?v=Hc79sDi3f0U "Now in Android: 55")
+[<img src="https://i.ytimg.com/vi/Hc79sDi3f0U/maxresdefault.jpg" width="50%">](Untitled.mp4)
 
 # Add Genre
 ![image](https://github.com/shincyshnz/movie-cms/assets/48871950/0c2d4a21-1fbd-45c2-a3b3-b778249749b3)
