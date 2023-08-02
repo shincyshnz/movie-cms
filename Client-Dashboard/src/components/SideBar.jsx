@@ -7,6 +7,7 @@ import {
   MdLogout,
 } from "react-icons/md";
 import { Link } from "react-router-dom";
+import Dashboard from "../Pages/Dashboard";
 
 const SideBar = () => {
   const [isOpen, setIsOpen] = useState(true);
@@ -43,7 +44,7 @@ const SideBar = () => {
           <Link
             to={menu?.link}
             key={index}
-            className="flex items-center text-sm gap-3.5 font-medium p-2 hover:bg-violet-800 rounded-md"
+            className="flex items-center text-sm gap-3.5 font-medium p-2 rounded-md hover:bg-violet-800 focus:ring-1 focus:bg-violet-800"
           >
             <div className="group relative">
               <div>

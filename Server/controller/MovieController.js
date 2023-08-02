@@ -1,5 +1,5 @@
 // const { Error } = require("mongoose");
-const { handler } = require("../middlware/upload");
+// const { handler } = require("../middlware/upload");
 const movieModel = require("../model/movieModel");
 
 const movieById = async (req, res) => {
@@ -67,6 +67,20 @@ const editMovies = async (req, res) => {
     }
 };
 
+const deleteMovies = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const removedMovie = await movieModel.findOneAndRemove({ _id: id });
+        if (removedMovie) {
+            res.status(200).json(removedMovie);
+        }
+    } catch (error) {
+        res.status(400).json({
+            message: error.message,
+        });
+    }
+};
+
 module.exports = {
-    movieById, movies, addMovies, editMovies
+    movieById, movies, addMovies, editMovies, deleteMovies
 };

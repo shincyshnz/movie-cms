@@ -1,14 +1,12 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import MovieCard from "../components/MovieCard";
 import axios from "axios";
 import { useError } from "../context/ErrorContext";
-import DeleteModal from "../components/DeleteModal";
 
 const Dashboard = () => {
   const { errorObj, handleErrorObj, deleteErrorObj } = useError();
 
   const [isLoading, setIsLoading] = useState(false);
-  const [isShowDeleteModal, setIsShowDeleteModal] = useState(false);
   const [movieList, setMovieList] = useState([]);
 
   useEffect(() => {
@@ -31,10 +29,6 @@ const Dashboard = () => {
     }
   };
 
-  const handleDelete = (id) => {
-    console.log(id, "==clicked");
-  };
-
   return (
     <div className="px-10 py-5 xl:py-20 xl:px-48 grid grid-cols-1 lg:grid-cols-2 gap-x-16 gap-y-4 min-h-max">
       {isLoading ? (
@@ -52,7 +46,8 @@ const Dashboard = () => {
             <MovieCard
               key={movie._id}
               movie={movie}
-              handleDelete={(e) => handleDelete(movie._id)}
+              setMovieList={setMovieList}
+              movieList={movieList}
             />
           );
         })
@@ -61,6 +56,7 @@ const Dashboard = () => {
       {errorObj?.map((err, index) => {
         return err.apiError && <Error errorKey="apiError" key={index} />;
       })}
+
     </div>
   );
 };
