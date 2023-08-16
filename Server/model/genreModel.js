@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const genreModel = mongoose.Schema(
+const genreSchema = mongoose.Schema(
     {
         name: {
             type: String,
@@ -11,4 +11,4 @@ const genreModel = mongoose.Schema(
         }
     }, { timestamps: true });
 
-module.exports = mongoose.model("Genre", genreModel);
+module.exports = mongoose.model("Genre", genreSchema);

@@ -1,5 +1,3 @@
-// const { Error } = require("mongoose");
-// const { handler } = require("../middlware/upload");
 const movieModel = require("../model/movieModel");
 
 const movieById = async (req, res) => {

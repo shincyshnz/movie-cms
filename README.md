@@ -37,4 +37,5 @@ Users can add Genre in this page. The Details are stored as a seperate collectio
 - Axios
 - React Router
 - Multer
+- Bcrypt
 
