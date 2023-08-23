@@ -10,7 +10,6 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import Login from "./Pages/Login";
 
 function App() {
-  const pathName = window.location.pathname.slice(1);
   return (
     <>
       <Header />

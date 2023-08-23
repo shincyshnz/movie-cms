@@ -7,6 +7,8 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const Register = () => {
+  const naviagte = useNavigate();
+
   const [input, setInput] = useState({
     email: "",
     password: "",
@@ -14,7 +16,6 @@ const Register = () => {
   });
 
   const { errorObj, handleErrorObj, deleteErrorObj } = useError();
-  const naviagte = useNavigate();
 
   const onInputChange = (e) => {
     const { name, value } = e.target;
@@ -76,11 +77,12 @@ const Register = () => {
 
       if (response.status === 200) {
         toast.update(toastId, {
-          render: "Uploaded Succesfully...",
+          render: response.data.message,
           type: "success",
           isLoading: false,
           autoClose: 3000,
-        }).then(naviagte("/"));
+          onChange: () => naviagte("/") 
+        });
       }
 
     } catch (error) {
