@@ -30,8 +30,9 @@ const Login = () => {
 
     switch (name) {
       case "email":
-        !value || !emailRegex.test(value) &&
-        handleErrorObj(name, "Please enter a valid email.");
+        !value ||
+          (!emailRegex.test(value) &&
+            handleErrorObj(name, "Please enter a valid email."));
         break;
 
       case "password":
@@ -50,7 +51,10 @@ const Login = () => {
         data: input,
       });
 
+      // Generate Access Token
+
       if (response.status === 200) {
+        console.log(response);
         naviagte("/dashboard");
       }
     } catch (error) {

@@ -1,9 +1,9 @@
 const { Users } = require("../model/userModel");
-const bcrypt = require("bcrypt");
+const { generatedPasswordHash, comparePasswordHash } = require("../utils/bcrypt");
+const { generateAccessToken } = require("../utils/jwt");
 
 const register = async (req, res) => {
     const { email, password } = req.body;
-    const salt = 10;
 
     // Check if user exists, if not store use data in to db with hashed password 
     try {
@@ -11,7 +11,7 @@ const register = async (req, res) => {
         if (isExists) {
             return res.status(404).json({ message: "User already exists" });
         }
-        const hashedPass = await bcrypt.hash(password, salt);
+        const hashedPass = await generatedPasswordHash(password, salt);
         await Users.create({ email, password: hashedPass })
 
         res.json({
@@ -24,9 +24,7 @@ const register = async (req, res) => {
     }
 };
 
-
 const login = async (req, res) => {
-    console.log(req.body);
     const { email, password } = req.body;
 
     try {
@@ -35,10 +33,15 @@ const login = async (req, res) => {
             return res.status(404).json({ message: "Username/Paswword is not valid!" });
         }
 
-        const validPassword = await bcrypt.compare(password, user.password);
+        const validPassword = await comparePasswordHash(password, user.password);
         if (!validPassword) {
             return res.status(404).json({ message: "Username/Paswword is not valid!" });
         }
+
+        // Generate Access Token
+        const accessToken = generateAccessToken(user._id);
+
+        res.status(200).json({ _id: user._id, email: user.email, token: accessToken });
 
     } catch (error) {
         res.status(404).json({
@@ -47,9 +50,11 @@ const login = async (req, res) => {
     }
 };
 
-const profile = (req, res) => {
-    console.log(req.body);
-    res.json("Profile");
+const watchLater = async (req, res) => {
+    const userId = req.body.userId;
+
+    const watchLaterMovies = await Users.findById({ _id: userId }).populate('movies');
+    res.json(watchLaterMovies);
 };
 
-module.exports = { register, login, profile };
+module.exports = { register, login, watchLater };

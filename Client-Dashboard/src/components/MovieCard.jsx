@@ -4,12 +4,13 @@ import {
   MdDeleteOutline,
   MdModeEditOutline,
   MdErrorOutline,
+  MdOutlineWatchLater,
 } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 
-const MovieCard = ({ movie, setMovieList, movieList }) => {
+const MovieCard = ({ movie, setMovieList, movieList, isWatchLater }) => {
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
   const { _id, title, rating, genres, url } = movie;
@@ -30,7 +31,7 @@ const MovieCard = ({ movie, setMovieList, movieList }) => {
       );
 
       if (response.status === 200) {
-        const newMovieList = movieList.filter(movie => movie._id !== id);
+        const newMovieList = movieList.filter((movie) => movie._id !== id);
         setMovieList(newMovieList);
 
         toast.update(toastId, {
@@ -49,6 +50,8 @@ const MovieCard = ({ movie, setMovieList, movieList }) => {
       });
     }
   };
+
+  const addTowishList = () => {};
 
   return (
     <Fragment>
@@ -92,6 +95,11 @@ const MovieCard = ({ movie, setMovieList, movieList }) => {
               id={_id}
               onClick={() => setShowModal(true)}
             />
+            {!isWatchLater && <MdOutlineWatchLater
+              className="hover:opacity-70 cursor-pointer"
+              id={_id}
+              onClick={addTowishList}
+            />}
           </div>
         </div>
 

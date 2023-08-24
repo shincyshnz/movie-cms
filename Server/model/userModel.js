@@ -11,6 +11,10 @@ const userSchema = new mongoose.Schema({
         type: String,
         trim: true,
         required: [true, "Password field cannot be empty"]
+    },
+    watchLater: {
+        type : mongoose.Schema.Types.ObjectId,
+        ref : "movies"
     }
 }, { timestamps: true });
 

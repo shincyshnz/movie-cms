@@ -7,7 +7,7 @@ const ProtectedRoute = () => {
   const { auth } = useAuth();
 
   if (!auth) {
-    return <Navigate to="/register" replace={true} />;
+    return <Navigate to="/" replace={true} />;
   }
 
   return (

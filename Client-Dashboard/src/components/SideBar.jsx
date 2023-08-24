@@ -5,6 +5,7 @@ import {
   MdAddBox,
   MdFormatListBulletedAdd,
   MdLogout,
+  MdOutlineWatchLater
 } from "react-icons/md";
 import { Link } from "react-router-dom";
 import Dashboard from "../Pages/Dashboard";
@@ -15,6 +16,7 @@ const SideBar = () => {
     { name: "Dashboard", link: "/dashboard", icon: MdDashboard },
     { name: "Add Movies", link: "/add-movies", icon: MdFormatListBulletedAdd },
     { name: "Add Genre", link: "/add-genre", icon: MdAddBox },
+    { name: "Watch Later", link: "/watch-later", icon: MdOutlineWatchLater },
     { name: "Logout", link: "/logout", icon: MdLogout },
   ];
 

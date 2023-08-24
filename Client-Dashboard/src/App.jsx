@@ -8,8 +8,14 @@ import AddMovies from "./Pages/AddMovies";
 import Register from "./Pages/Register";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Login from "./Pages/Login";
+import { useState } from "react";
 
 function App() {
+  // const [iswatchLater, setIsWatchLater] = useState(true);
+  // if (window.location.pathname == "/dashboard") {
+  //   setIsWatchLater(true);
+  // }
+
   return (
     <>
       <Header />
@@ -19,10 +25,18 @@ function App() {
           <Route path="/register" element={<Register />}></Route>
 
           <Route element={<ProtectedRoute />}>
-            <Route path="/dashboard" element={<Dashboard />}></Route>
+            <Route
+              path="/dashboard"
+              element={<Dashboard isWatchLater = {false}/>}
+            ></Route>
             <Route path="/add-genre" element={<AddGenre />}></Route>
             <Route path="/add-movies/:id?" element={<AddMovies />}></Route>
+            <Route
+              path="/watch-later"
+              element={<Dashboard isWatchLater = {true}/>}
+            ></Route>
           </Route>
+          <Route path="*" element={<Login />}></Route>
         </Routes>
       </div>
     </>

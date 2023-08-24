@@ -3,7 +3,7 @@ import MovieCard from "../components/MovieCard";
 import axios from "axios";
 import { useError } from "../context/ErrorContext";
 
-const Dashboard = () => {
+const Dashboard = ({ isWatchLater }) => {
   const { errorObj, handleErrorObj, deleteErrorObj } = useError();
 
   const [isLoading, setIsLoading] = useState(false);
@@ -48,6 +48,7 @@ const Dashboard = () => {
               movie={movie}
               setMovieList={setMovieList}
               movieList={movieList}
+              isWatchLater = {isWatchLater}
             />
           );
         })
@@ -56,7 +57,6 @@ const Dashboard = () => {
       {errorObj?.map((err, index) => {
         return err.apiError && <Error errorKey="apiError" key={index} />;
       })}
-
     </div>
   );
 };
