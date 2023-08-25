@@ -3,8 +3,10 @@ import { useError } from "../context/ErrorContext";
 import { useNavigate } from "react-router-dom";
 import Error from "../components/Error";
 import axios from "axios";
+import { useAuth } from "../context/AuthContext";
 
 const Login = () => {
+  const { storeToken } = useAuth();
   const [input, setInput] = useState({
     email: "",
     password: "",
@@ -26,7 +28,9 @@ const Login = () => {
   const validateInput = (e) => {
     const { name, value } = e.target;
     const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
+
     deleteErrorObj(name);
+    deleteErrorObj("apiError");
 
     switch (name) {
       case "email":
@@ -51,12 +55,12 @@ const Login = () => {
         data: input,
       });
 
-      // Generate Access Token
-
+      // Store Access Token in localstorage
       if (response.status === 200) {
-        console.log(response);
+        storeToken(response.data.accessToken); 
         naviagte("/dashboard");
       }
+
     } catch (error) {
       handleErrorObj("apiError", error.message);
     }
@@ -85,6 +89,7 @@ const Login = () => {
           {errorObj?.map((err, index) => {
             return err.email && <Error errorKey="email" key={index} />;
           })}
+
         </div>
         <div className="mb-6">
           <label
@@ -105,6 +110,9 @@ const Login = () => {
             autoComplete="off"
           />
           {errorObj?.map((err, index) => {
+            if(err.apiError){
+              return err.apiError && <Error errorKey="apiError" key={index} />;
+            }           
             return err.password && <Error errorKey="password" key={index} />;
           })}
         </div>

@@ -1,13 +1,13 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
-import { Navigate, Outlet } from "react-router-dom";
+import { Navigate, Outlet, useNavigate } from "react-router-dom";
 import SideBar from "./SideBar";
 
-const ProtectedRoute = () => {
-  const { auth } = useAuth();
+const ProtectedRoute = ({ children }) => {
+  const token = localStorage.getItem("x-token");
 
-  if (!auth) {
-    return <Navigate to="/" replace={true} />;
+  if (!token) {
+    return <Navigate to="/" replace />;
   }
 
   return (

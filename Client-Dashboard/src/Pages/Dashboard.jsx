@@ -2,21 +2,33 @@ import React, { useEffect, useState } from "react";
 import MovieCard from "../components/MovieCard";
 import axios from "axios";
 import { useError } from "../context/ErrorContext";
+import { useAuth } from "../context/AuthContext";
 
-const Dashboard = ({ isWatchLater }) => {
+const Dashboard = ({ isWatchLater = false }) => {
   const { errorObj, handleErrorObj, deleteErrorObj } = useError();
 
   const [isLoading, setIsLoading] = useState(false);
   const [movieList, setMovieList] = useState([]);
+  const { token } = useAuth();
 
   useEffect(() => {
     setIsLoading(true);
     fetchMovies();
-  }, []);
+  }, [isWatchLater]);
 
   const fetchMovies = async () => {
     try {
-      const response = await axios(import.meta.env.VITE_MOVIES_URL);
+      let response;
+      if (isWatchLater) {
+        response = axios(`${import.meta.env.VITE_AUTH_URL}/watch-later`, {
+          method: "GET",
+          headers: {
+            "accessToken": token,
+          },
+        });
+      } else {
+        response = await axios(import.meta.env.VITE_MOVIES_URL);
+      }
       setMovieList(response.data);
     } catch (error) {
       deleteErrorObj("apiError");
@@ -48,7 +60,7 @@ const Dashboard = ({ isWatchLater }) => {
               movie={movie}
               setMovieList={setMovieList}
               movieList={movieList}
-              isWatchLater = {isWatchLater}
+              isWatchLater={isWatchLater}
             />
           );
         })

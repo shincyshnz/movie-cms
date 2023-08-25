@@ -8,7 +8,6 @@ import {
   MdOutlineWatchLater
 } from "react-icons/md";
 import { Link } from "react-router-dom";
-import Dashboard from "../Pages/Dashboard";
 
 const SideBar = () => {
   const [isOpen, setIsOpen] = useState(true);

@@ -53,6 +53,7 @@ const MovieCard = ({ movie, setMovieList, movieList, isWatchLater }) => {
 
   const addTowishList = () => {};
 
+
   return (
     <Fragment>
       <div className="bg-slate-900 rounded-2xl md:flex">
