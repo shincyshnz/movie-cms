@@ -12,10 +12,10 @@ const userSchema = new mongoose.Schema({
         trim: true,
         required: [true, "Password field cannot be empty"]
     },
-    watchLater: {
+    watchLater: [{
         type : mongoose.Schema.Types.ObjectId,
         ref : "movies"
-    }
+    }]
 }, { timestamps: true });
 
 module.exports = {

@@ -51,10 +51,39 @@ const login = async (req, res) => {
 };
 
 const watchLater = async (req, res) => {
-    const userId = req.body.userId;
+    const { userId } = req.body;
 
-    const watchLaterMovies = await Users.findById({ _id: userId }).populate('movies');
+    const watchLaterMovies = await Users.findById({ _id: userId }).populate("movies");
+    console.log(watchLaterMovies);
     res.json(watchLaterMovies);
 };
 
-module.exports = { register, login, watchLater };
+const addWatchLater = async (req, res) => {
+    const { movieId, userId } = req.body;
+
+    try {
+        const isUserExists = await Users.findById({ _id: userId });
+        if (!isUserExists) {
+            res.status(404).json({
+                message: "User doesnot Exists!"
+            });
+        }
+        let watchLaterMovies = isUserExists.watchLater || [];
+
+        if (isUserExists.watchLater.indexOf(movieId) !== -1) {
+            return res.status(404).json({
+                message: "Movie Already exists in watch later"
+            });
+        }
+        watchLaterMovies.push(movieId);
+        const updatedData = await Users.findByIdAndUpdate({ _id: userId }, { watchLater: watchLaterMovies }, { new: true });
+        updatedData && res.status(200).json();
+
+    } catch (error) {
+        res.status(404).json({
+            message: error.message
+        });
+    }
+};
+
+module.exports = { register, login, watchLater, addWatchLater };

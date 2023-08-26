@@ -9,9 +9,11 @@ import {
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
+import { useAuth } from "../context/AuthContext";
 
 const MovieCard = ({ movie, setMovieList, movieList, isWatchLater }) => {
   const navigate = useNavigate();
+  const { getToken } = useAuth();
   const [showModal, setShowModal] = useState(false);
   const { _id, title, rating, genres, url } = movie;
 
@@ -51,8 +53,42 @@ const MovieCard = ({ movie, setMovieList, movieList, isWatchLater }) => {
     }
   };
 
-  const addTowishList = () => {};
+  const addTowishList = async (e) => {
+    e.preventDefault();
+    const toastId = toast.loading("Adding to watch later...");
 
+    try {
+      const response = await axios(
+        `${import.meta.env.VITE_AUTH_URL}/watch-later`,
+        {
+          method: "PUT",
+          headers: {
+            accesstoken: getToken(),
+          },
+          data:{
+            movieId : _id
+          }
+        }
+      );
+
+      if (response.status === 200) {
+        toast.update(toastId, {
+          render: "Added to watch later Succesfully...",
+          type: "success",
+          isLoading: false,
+          autoClose: 3000,
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      toast.update(toastId, {
+        render: error.response.data.message,
+        type: "error",
+        isLoading: false,
+        autoClose: 3000,
+      });
+    }
+  };
 
   return (
     <Fragment>
@@ -96,11 +132,13 @@ const MovieCard = ({ movie, setMovieList, movieList, isWatchLater }) => {
               id={_id}
               onClick={() => setShowModal(true)}
             />
-            {!isWatchLater && <MdOutlineWatchLater
-              className="hover:opacity-70 cursor-pointer"
-              id={_id}
-              onClick={addTowishList}
-            />}
+            {!isWatchLater && (
+              <MdOutlineWatchLater
+                className="hover:opacity-70 cursor-pointer"
+                id={_id}
+                onClick={addTowishList}
+              />
+            )}
           </div>
         </div>
 

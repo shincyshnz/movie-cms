@@ -9,7 +9,7 @@ const Dashboard = ({ isWatchLater = false }) => {
 
   const [isLoading, setIsLoading] = useState(false);
   const [movieList, setMovieList] = useState([]);
-  const { token } = useAuth();
+  const { getToken } = useAuth();
 
   useEffect(() => {
     setIsLoading(true);
@@ -19,22 +19,22 @@ const Dashboard = ({ isWatchLater = false }) => {
   const fetchMovies = async () => {
     try {
       let response;
+      console.log(isWatchLater);
       if (isWatchLater) {
-        response = axios(`${import.meta.env.VITE_AUTH_URL}/watch-later`, {
+        response = await axios(`${import.meta.env.VITE_AUTH_URL}/watch-later`, {
           method: "GET",
           headers: {
-            "accessToken": token,
+            "accessToken": getToken,
           },
         });
-      } else {
-        response = await axios(import.meta.env.VITE_MOVIES_URL);
       }
-      setMovieList(response.data);
+      response = await axios(import.meta.env.VITE_MOVIES_URL);
+      setMovieList(response?.data);
     } catch (error) {
       deleteErrorObj("apiError");
       handleErrorObj(
         "apiError",
-        `${error.message} : Error fetching movie details`
+        `${error?.message} : Error fetching movie details`
       );
     } finally {
       setIsLoading(false);

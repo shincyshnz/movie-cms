@@ -4,7 +4,8 @@ import { Navigate, Outlet, useNavigate } from "react-router-dom";
 import SideBar from "./SideBar";
 
 const ProtectedRoute = ({ children }) => {
-  const token = localStorage.getItem("x-token");
+  const { getToken } = useAuth();
+  const token = getToken();
 
   if (!token) {
     return <Navigate to="/" replace />;
