@@ -31,6 +31,19 @@ const MovieCard = ({ movie, setMovieList, movieList, isWatchLater }) => {
       let response;
       if (isWatchLater) {
         //Delete from watchlater
+        const watchLaterMovies = movieList.map((mov)=> mov._id);
+        response = await axios(
+          `${import.meta.env.VITE_AUTH_URL}/watch-later/${id}`,
+          {
+            method: "DELETE",
+            headers: {
+              accessToken: getToken(),
+            },
+            data:{
+              watchLaterMovies : watchLaterMovies
+            }
+          }
+        );
       } else {
         //Delete from dashboard
         response = await axios.delete(
@@ -41,7 +54,7 @@ const MovieCard = ({ movie, setMovieList, movieList, isWatchLater }) => {
       if (response.status === 200) {
         const newMovieList = movieList.filter((movie) => movie._id !== id);
         setMovieList(newMovieList);
-
+        
         toast.update(toastId, {
           render: "Deleted Succesfully...",
           type: "success",
@@ -97,7 +110,7 @@ const MovieCard = ({ movie, setMovieList, movieList, isWatchLater }) => {
 
   return (
     <Fragment>
-      <div className="bg-slate-900 rounded-2xl md:flex">
+      <div className="bg-slate-900 rounded-2xl md:flex  md:max-h-96">
         <img
           src={url}
           alt={`${title}-poster`}
@@ -117,7 +130,7 @@ const MovieCard = ({ movie, setMovieList, movieList, isWatchLater }) => {
               return (
                 <div
                   key={index}
-                  className="bg-transparent min-w-max text-gray-400 font-semibold py-2 px-4 border border-gray-400 rounded-2xl text-xs w-min"
+                  className="bg-transparent min-w-max text-gray-400 font-semibold py-1 px-4 border border-gray-400 rounded-2xl text-xs w-min"
                 >
                   {genre.name}
                 </div>
@@ -126,7 +139,8 @@ const MovieCard = ({ movie, setMovieList, movieList, isWatchLater }) => {
           </div>
 
           <RatingStars rating={rating} />
-          <div className="flex gap-2 flex-wrap text-gray-400 justify-end px-5 text-2xl">
+
+          <div className="flex gap-2 flex-wrap item text-gray-400 justify-end px-5 text-2xl">
             {!isWatchLater && (
               <MdModeEditOutline
                 className="hover:opacity-70 cursor-pointer"

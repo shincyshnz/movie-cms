@@ -87,9 +87,9 @@ const watchLater = async (req, res) => {
             .findById({ _id: userId })
             .populate({
                 path: 'watchLater',
-                populate: { path: 'genres', select : 'name' }
-              })
-            .sort('-createdAt');
+                populate: { path: 'genres', select: 'name' }
+            })
+            .sort({watchLaer:-1});
         res.json(watchLaterMovies.watchLater);
     } catch (error) {
         res.status(404).json({
@@ -98,4 +98,22 @@ const watchLater = async (req, res) => {
     }
 };
 
-module.exports = { register, login, watchLater, addWatchLater };
+const deleteWatchLater = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { userId, watchLaterMovies } = req.body;
+
+        const updatedWatchLater = watchLaterMovies.filter(movID => movID != id);
+        const removedMovie = await Users.findByIdAndUpdate({ _id: userId }, { watchLater: updatedWatchLater }, { new: true });
+        if (removedMovie) {
+            res.status(200).json(removedMovie);
+        }
+
+    } catch (error) {
+        res.status(400).json({
+            message: error.message,
+        });
+    }
+};
+
+module.exports = { register, login, watchLater, addWatchLater, deleteWatchLater };
