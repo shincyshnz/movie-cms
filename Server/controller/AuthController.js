@@ -4,6 +4,7 @@ const { generateAccessToken } = require("../utils/jwt");
 
 const register = async (req, res) => {
     const { email, password } = req.body;
+    const SALT = 10;
 
     // Check if user exists, if not store use data in to db with hashed password 
     try {
@@ -11,7 +12,7 @@ const register = async (req, res) => {
         if (isExists) {
             return res.status(404).json({ message: "User already exists" });
         }
-        const hashedPass = await generatedPasswordHash(password, salt);
+        const hashedPass = await generatedPasswordHash(password, SALT);
         await Users.create({ email, password: hashedPass })
 
         res.json({
@@ -50,14 +51,6 @@ const login = async (req, res) => {
     }
 };
 
-const watchLater = async (req, res) => {
-    const { userId } = req.body;
-
-    const watchLaterMovies = await Users.findById({ _id: userId }).populate("movies");
-    console.log(watchLaterMovies);
-    res.json(watchLaterMovies);
-};
-
 const addWatchLater = async (req, res) => {
     const { movieId, userId } = req.body;
 
@@ -79,6 +72,25 @@ const addWatchLater = async (req, res) => {
         const updatedData = await Users.findByIdAndUpdate({ _id: userId }, { watchLater: watchLaterMovies }, { new: true });
         updatedData && res.status(200).json();
 
+    } catch (error) {
+        res.status(404).json({
+            message: error.message
+        });
+    }
+};
+
+const watchLater = async (req, res) => {
+    const { userId } = req.body;
+    try {
+
+        const watchLaterMovies = await Users
+            .findById({ _id: userId })
+            .populate({
+                path: 'watchLater',
+                populate: { path: 'genres', select : 'name' }
+              })
+            .sort('-createdAt');
+        res.json(watchLaterMovies.watchLater);
     } catch (error) {
         res.status(404).json({
             message: error.message

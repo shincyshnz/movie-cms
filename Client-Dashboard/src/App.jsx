@@ -11,25 +11,28 @@ import Logout from "./Pages/Logout";
 import { useState } from "react";
 
 function App() {
-  const [isWatchLater ,setIsWatchLater] = useState(true);
+  const [isWatchLater, setIsWatchLater] = useState(true);
   return (
     <>
       <Header />
       <div className="flex">
         <Routes>
-          <Route path="/" element={<Login />}></Route>
           <Route path="/register" element={<Register />}></Route>
+          <Route path="/login" element={<Login />}></Route>
+          
+          <Route path="/" element={<ProtectedRoute />}>
+            <Route path="/" element={<Dashboard setIsWatchLater={setIsWatchLater}/>}></Route>
+            <Route path="/login" element={<Dashboard />}></Route>
 
-          <Route element={<ProtectedRoute />}>
-            <Route index path="/dashboard" element={<Dashboard />}></Route>
             <Route path="/add-genre" element={<AddGenre />}></Route>
             <Route path="/add-movies/:id?" element={<AddMovies />}></Route>
             <Route
               path="/watch-later"
-              element={<Dashboard isWatchLater={isWatchLater} />}
+              element={<Dashboard isWatchLater={isWatchLater} setIsWatchLater={setIsWatchLater} />}
             ></Route>
             <Route path="/logout" element={<Logout />}></Route>
           </Route>
+
           <Route path="*" element={<Login />}></Route>
         </Routes>
       </div>

@@ -5,7 +5,7 @@ const router = express.Router();
 
 router.post("/register", register);
 router.post("/login",  login);
-router.get("/watch-later", checkAuth, watchLater);
 router.put("/watch-later", checkAuth, addWatchLater);
+router.get("/watch-later", checkAuth, watchLater);
 
 module.exports = router;

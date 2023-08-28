@@ -28,9 +28,15 @@ const MovieCard = ({ movie, setMovieList, movieList, isWatchLater }) => {
     const toastId = toast.loading("Please Wait...");
 
     try {
-      const response = await axios.delete(
-        `${import.meta.env.VITE_MOVIES_URL}/${id}`
-      );
+      let response;
+      if (isWatchLater) {
+        //Delete from watchlater
+      } else {
+        //Delete from dashboard
+        response = await axios.delete(
+          `${import.meta.env.VITE_MOVIES_URL}/${id}`
+        );
+      }
 
       if (response.status === 200) {
         const newMovieList = movieList.filter((movie) => movie._id !== id);
@@ -65,9 +71,9 @@ const MovieCard = ({ movie, setMovieList, movieList, isWatchLater }) => {
           headers: {
             accesstoken: getToken(),
           },
-          data:{
-            movieId : _id
-          }
+          data: {
+            movieId: _id,
+          },
         }
       );
 
@@ -80,7 +86,6 @@ const MovieCard = ({ movie, setMovieList, movieList, isWatchLater }) => {
         });
       }
     } catch (error) {
-      console.log(error);
       toast.update(toastId, {
         render: error.response.data.message,
         type: "error",
@@ -122,11 +127,13 @@ const MovieCard = ({ movie, setMovieList, movieList, isWatchLater }) => {
 
           <RatingStars rating={rating} />
           <div className="flex gap-2 flex-wrap text-gray-400 justify-end px-5 text-2xl">
-            <MdModeEditOutline
-              className="hover:opacity-70 cursor-pointer"
-              id={_id}
-              onClick={handleEdit}
-            />
+            {!isWatchLater && (
+              <MdModeEditOutline
+                className="hover:opacity-70 cursor-pointer"
+                id={_id}
+                onClick={handleEdit}
+              />
+            )}
             <MdDeleteOutline
               className="hover:opacity-70 cursor-pointer"
               id={_id}
@@ -175,7 +182,8 @@ const MovieCard = ({ movie, setMovieList, movieList, isWatchLater }) => {
                 <div className="relative px-6 py-1 flex-auto">
                   <p className="my-4 text-slate-500 text-xl leading-relaxed">
                     Are you sure you want to delete the movie{" "}
-                    <span className="text-slate-600">{`"${title}" ?`}</span>
+                    <span className="text-slate-600">{`"${title}" ?`}</span>{" "}
+                    {isWatchLater && "from watch later?"}
                   </p>
                 </div>
                 {/*footer*/}

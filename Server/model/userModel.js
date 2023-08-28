@@ -14,7 +14,7 @@ const userSchema = new mongoose.Schema({
     },
     watchLater: [{
         type : mongoose.Schema.Types.ObjectId,
-        ref : "movies"
+        ref : "Movies"
     }]
 }, { timestamps: true });
 

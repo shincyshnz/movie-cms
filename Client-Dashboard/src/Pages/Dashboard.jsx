@@ -19,17 +19,19 @@ const Dashboard = ({ isWatchLater = false }) => {
   const fetchMovies = async () => {
     try {
       let response;
-      console.log(isWatchLater);
       if (isWatchLater) {
+        // Watch later movie list
         response = await axios(`${import.meta.env.VITE_AUTH_URL}/watch-later`, {
           method: "GET",
           headers: {
-            "accessToken": getToken,
+            accessToken: getToken(),
           },
         });
+      } else {
+        // dashboard movie list
+        response = await axios(import.meta.env.VITE_MOVIES_URL);
       }
-      response = await axios(import.meta.env.VITE_MOVIES_URL);
-      setMovieList(response?.data);
+      setMovieList((prev) => (prev = response?.data));
     } catch (error) {
       deleteErrorObj("apiError");
       handleErrorObj(

@@ -7,7 +7,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const Register = () => {
-  const naviagte = useNavigate();
+  const navigate = useNavigate();
 
   const [input, setInput] = useState({
     email: "",
@@ -19,6 +19,7 @@ const Register = () => {
 
   const onInputChange = (e) => {
     const { name, value } = e.target;
+    deleteErrorObj("apiError");
     validateInput(e);
 
     setInput((prev) => ({
@@ -80,9 +81,9 @@ const Register = () => {
           render: response.data.message,
           type: "success",
           isLoading: false,
-          autoClose: 3000,
-          onChange: () => naviagte("/") 
+          autoClose: 3000
         });
+        navigate("/login" , {replace :true});
       }
 
     } catch (error) {
@@ -91,8 +92,6 @@ const Register = () => {
         "apiError",
         `${error.message} ${error.response?.data.message}`
       );
-    }finally{
-      deleteErrorObj("apiError");
     }
   };
 
@@ -181,7 +180,7 @@ const Register = () => {
             Already have an account?&nbsp;
             <a
               className="inline-block align-baseline font-bold text-sm text-violet-500 hover:text-violet-800"
-              href="/"
+              href="/login"
             >
               Login
             </a>

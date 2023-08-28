@@ -13,7 +13,7 @@ const Login = () => {
   });
 
   const { errorObj, handleErrorObj, deleteErrorObj } = useError();
-  const naviagte = useNavigate();
+  const navigate = useNavigate();
 
   const onInputChange = (e) => {
     const { name, value } = e.target;
@@ -58,9 +58,8 @@ const Login = () => {
       // Store Access Token in localstorage
       if (response.status === 200) {
         storeToken(response.data.accessToken); 
-        naviagte("/dashboard");
+        navigate("/" , {replace :true});
       }
-
     } catch (error) {
       handleErrorObj("apiError", error.message);
     }

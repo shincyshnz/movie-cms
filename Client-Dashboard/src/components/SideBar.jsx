@@ -12,7 +12,7 @@ import { Link } from "react-router-dom";
 const SideBar = () => {
   const [isOpen, setIsOpen] = useState(true);
   const menus = [
-    { name: "Dashboard", link: "/dashboard", icon: MdDashboard },
+    { name: "Dashboard", link: "/", icon: MdDashboard },
     { name: "Add Movies", link: "/add-movies", icon: MdFormatListBulletedAdd },
     { name: "Add Genre", link: "/add-genre", icon: MdAddBox },
     { name: "Watch Later", link: "/watch-later", icon: MdOutlineWatchLater },
