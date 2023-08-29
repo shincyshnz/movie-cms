@@ -1,5 +1,6 @@
 const movieModel = require("../model/movieModel");
 
+// Get Movies By ID
 const movieById = async (req, res) => {
     try {
         const { id } = req.params;
@@ -12,6 +13,7 @@ const movieById = async (req, res) => {
     }
 };
 
+// Get Movies 
 const movies = async (req, res) => {
     try {
         const movieList = await movieModel.find().populate("genres").sort('-createdAt');
@@ -23,6 +25,7 @@ const movies = async (req, res) => {
     }
 };
 
+// Add Movies to Movies collection
 const addMovies = async (req, res) => {
     try {
         const { title, rating, genres } = req.body;
@@ -39,6 +42,7 @@ const addMovies = async (req, res) => {
     }
 };
 
+// Edit Movies in Movies collection based on ID
 const editMovies = async (req, res) => {
     try {
         let updatedMovie;
@@ -65,6 +69,7 @@ const editMovies = async (req, res) => {
     }
 };
 
+// Delete Movies in Movies collection based on ID
 const deleteMovies = async (req, res) => {
     try {
         const { id } = req.params;

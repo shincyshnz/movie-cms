@@ -89,7 +89,7 @@ const watchLater = async (req, res) => {
                 path: 'watchLater',
                 populate: { path: 'genres', select: 'name' }
             })
-            .sort({watchLaer:-1});
+            .sort({ watchLaer: -1 });
         res.json(watchLaterMovies.watchLater);
     } catch (error) {
         res.status(404).json({
@@ -99,16 +99,21 @@ const watchLater = async (req, res) => {
 };
 
 const deleteWatchLater = async (req, res) => {
+    const { movieId } = req.params;
+    const { userId } = req.body;
+    
     try {
-        const { id } = req.params;
-        const { userId, watchLaterMovies } = req.body;
+        const removedMovieId = await Users.findByIdAndUpdate(
+            userId,
+            { $pull: { watchLater: movieId } },
+            { new: true }
+        );
 
-        const updatedWatchLater = watchLaterMovies.filter(movID => movID != id);
-        const removedMovie = await Users.findByIdAndUpdate({ _id: userId }, { watchLater: updatedWatchLater }, { new: true });
-        if (removedMovie) {
-            res.status(200).json(removedMovie);
+        if (removedMovieId) {
+            res.status(200).json({
+                message: `${movieId} removed from watch later successfully`
+            });
         }
-
     } catch (error) {
         res.status(400).json({
             message: error.message,
