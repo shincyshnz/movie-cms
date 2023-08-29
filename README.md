@@ -3,9 +3,14 @@
 TMDB is a web app built using React, Express and MongoDB. This app helps users to add, delete and update movie data including title, poster image, rating and genre.
 
 # Demo : 
-![Movie addition](https://github.com/shincyshnz/movie-cms/blob/main/Untitled.mp4)
+![Genre Addition](
+https://github.com/shincyshnz/movie-cms/assets/48871950/8c52d558-de96-4656-9ab7-747088621c9c)
 
-![Login](https://github.com/shincyshnz/movie-cms/assets/48871950/b5ca190b-3153-4b00-b308-c0324516bfe1))
+![Login](https://github.com/shincyshnz/movie-cms/assets/48871950/b5ca190b-3153-4b00-b308-c0324516bfe1)
+
+![Movie addition](https://github.com/shincyshnz/movie-cms/assets/48871950/3d7ce76a-ab23-4fad-b2b0-61cf9f1d7c9b)
+
+![Watch Later](https://github.com/shincyshnz/movie-cms/blob/main/Untitled.mp4)
 
 # Login
 ![Screenshot from 2023-08-29 12-48-00](https://github.com/shincyshnz/movie-cms/assets/48871950/a590b2f7-6a09-42c3-9e86-c247b66fbc90)
@@ -24,7 +29,6 @@ TMDB is a web app built using React, Express and MongoDB. This app helps users t
 
 # Watch Later
 ![Screenshot from 2023-08-29 12-50-51](https://github.com/shincyshnz/movie-cms/assets/48871950/09e57e2a-1569-4a2b-ad59-ae91d8cb0556)
-
 
 # Features
 
@@ -62,6 +66,4 @@ Users can login to TMDB application using email and password. JWT is used for au
 - Multer
 - Bcrypt
 - JWT
-
-
 
