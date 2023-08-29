@@ -3,6 +3,7 @@ import MovieCard from "../components/MovieCard";
 import axios from "axios";
 import { useError } from "../context/ErrorContext";
 import { useAuth } from "../context/AuthContext";
+import Skeleton from "../components/Skeleton";
 
 const Dashboard = ({ isWatchLater = false }) => {
   const { errorObj, handleErrorObj, deleteErrorObj } = useError();
@@ -21,6 +22,7 @@ const Dashboard = ({ isWatchLater = false }) => {
       let response;
       if (isWatchLater) {
         // Watch later movie list
+        setMovieList([]);
         response = await axios(`${import.meta.env.VITE_AUTH_URL}/watch-later`, {
           method: "GET",
           headers: {
@@ -29,6 +31,7 @@ const Dashboard = ({ isWatchLater = false }) => {
         });
       } else {
         // dashboard movie list
+        setMovieList([]);
         response = await axios(import.meta.env.VITE_MOVIES_URL);
       }
       setMovieList((prev) => (prev = response?.data));
@@ -45,19 +48,17 @@ const Dashboard = ({ isWatchLater = false }) => {
 
   return (
     <div className="px-10 py-5 xl:py-20 xl:px-48 grid-cols-1 lg:grid-cols-2 gap-x-16 gap-y-4 min-h-max grid">
-      {isLoading && (
-        <div
-          className="inline-block h-12 w-12 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
-          role="status"
-        >
-          <span className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">
-            Loading...
-          </span>
-        </div>
-      )}
-
-      {(movieList.length < 1) ? (
-        <p className="text-white text-xl"> Movies List Empty </p>
+      {isLoading ? (
+        <>
+          <Skeleton />
+          <Skeleton />
+          <Skeleton />
+          <Skeleton />
+          <Skeleton />
+          <Skeleton />
+        </>
+      ) : movieList.length < 1 ? (
+        <p className="text-white text-xl mx-auto my-10"> Movie List Empty </p>
       ) : (
         movieList.map((movie) => {
           return (

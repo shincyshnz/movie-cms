@@ -25,6 +25,17 @@ Users can add movie details including Poster, title and rating. Genre can be sel
 ## Add Genre Page
 Users can add Genre in this page. The Details are stored as a seperate collection in MongoDb. The list of Genres are also provided with edit and delete option.
 
+
+## Watch Later Page
+Users can add movies to watch later page. A watch button on dashboard when clicked add movies to watch later list and you can view watch later movie list in this page. Users can remove watch later movies by clicking delete button in the watch later page.
+
+## Register
+Users can register to TMDB application using email. Once registered you can access the site using your email and password.
+The hashed-password created using bcrypt and user email are stored in user collection. 
+
+## Login
+Users can login to TMDB application using email and password. JWT is used for authentication.
+
 # Technologies used
 - React
 - Express
@@ -38,4 +49,5 @@ Users can add Genre in this page. The Details are stored as a seperate collectio
 - React Router
 - Multer
 - Bcrypt
+- JWT
 
