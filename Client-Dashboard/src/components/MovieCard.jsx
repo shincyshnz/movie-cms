@@ -8,30 +8,34 @@ import {
 } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { ToastContainer, toast } from "react-toastify";
 import { useAuth } from "../context/AuthContext";
+import { toast } from "react-toastify";
 
 const MovieCard = ({ movie, setMovieList, movieList, isWatchLater }) => {
   const navigate = useNavigate();
-  const { getToken } = useAuth();
+  const { isAuthenticated, getToken } = useAuth();
   const [showModal, setShowModal] = useState(false);
   const { _id, title, rating, genres, url } = movie;
 
   const handleEdit = () => {
+    if (!isAuthenticated) {
+      return navigate("/login");
+    }
     navigate(`/add-movies/${_id}`);
   };
 
   const handleDelete = async (event, id) => {
     event.preventDefault();
+    if (!isAuthenticated) {
+      return navigate("/login");
+    }
     setShowModal(false);
-
-    const toastId = toast.loading("Please Wait...");
 
     try {
       let response;
       if (isWatchLater) {
         //Delete from watchlater
-        const watchLaterMovies = movieList.map((mov)=> mov._id);
+        const watchLaterMovies = movieList.map((mov) => mov._id);
         response = await axios(
           `${import.meta.env.VITE_AUTH_URL}/watch-later/${id}`,
           {
@@ -39,9 +43,9 @@ const MovieCard = ({ movie, setMovieList, movieList, isWatchLater }) => {
             headers: {
               accessToken: getToken(),
             },
-            data:{
-              watchLaterMovies : watchLaterMovies
-            }
+            data: {
+              watchLaterMovies: watchLaterMovies,
+            },
           }
         );
       } else {
@@ -54,28 +58,19 @@ const MovieCard = ({ movie, setMovieList, movieList, isWatchLater }) => {
       if (response.status === 200) {
         const newMovieList = movieList.filter((movie) => movie._id !== id);
         setMovieList(newMovieList);
-        
-        toast.update(toastId, {
-          render: "Deleted Succesfully...",
-          type: "success",
-          isLoading: false,
-          autoClose: 3000,
-        });
+
+        toast.success("Deleted Succesfully.")
       }
     } catch (error) {
-      toast.update(toastId, {
-        render: error.message,
-        type: "error",
-        isLoading: false,
-        autoClose: 3000,
-      });
+      toast.error(error.message);
     }
   };
 
   const addTowishList = async (e) => {
     e.preventDefault();
-    const toastId = toast.loading("Adding to watch later...");
-
+    if (!isAuthenticated) {
+      return navigate("/login");
+    }
     try {
       const response = await axios(
         `${import.meta.env.VITE_AUTH_URL}/watch-later`,
@@ -91,20 +86,10 @@ const MovieCard = ({ movie, setMovieList, movieList, isWatchLater }) => {
       );
 
       if (response.status === 200) {
-        toast.update(toastId, {
-          render: "Added to watch later Succesfully...",
-          type: "success",
-          isLoading: false,
-          autoClose: 3000,
-        });
+        toast.success( "Added to watch later Succesfully...");
       }
     } catch (error) {
-      toast.update(toastId, {
-        render: error.response.data.message,
-        type: "error",
-        isLoading: false,
-        autoClose: 3000,
-      });
+      toast.error(error.response?.data?.message)
     }
   };
 
@@ -140,41 +125,30 @@ const MovieCard = ({ movie, setMovieList, movieList, isWatchLater }) => {
 
           <RatingStars rating={rating} />
 
-          <div className="flex gap-2 flex-wrap item text-gray-400 justify-end px-5 text-2xl">
-            {!isWatchLater && (
-              <MdModeEditOutline
+          {isAuthenticated && (
+            <div className="flex gap-2 flex-wrap item text-gray-400 justify-end px-5 text-2xl">
+              {!isWatchLater && (
+                <MdModeEditOutline
+                  className="hover:opacity-70 cursor-pointer"
+                  id={_id}
+                  onClick={handleEdit}
+                />
+              )}
+              <MdDeleteOutline
                 className="hover:opacity-70 cursor-pointer"
                 id={_id}
-                onClick={handleEdit}
+                onClick={() => setShowModal(true)}
               />
-            )}
-            <MdDeleteOutline
-              className="hover:opacity-70 cursor-pointer"
-              id={_id}
-              onClick={() => setShowModal(true)}
-            />
-            {!isWatchLater && (
-              <MdOutlineWatchLater
-                className="hover:opacity-70 cursor-pointer"
-                id={_id}
-                onClick={addTowishList}
-              />
-            )}
-          </div>
+              {!isWatchLater && (
+                <MdOutlineWatchLater
+                  className="hover:opacity-70 cursor-pointer"
+                  id={_id}
+                  onClick={addTowishList}
+                />
+              )}
+            </div>
+          )}
         </div>
-
-        <ToastContainer
-          position="top-right"
-          autoClose={3000}
-          hideProgressBar={false}
-          newestOnTop={false}
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-          theme="dark"
-        />
       </div>
 
       {showModal && (

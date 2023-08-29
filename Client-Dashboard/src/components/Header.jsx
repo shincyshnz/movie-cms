@@ -1,12 +1,23 @@
 import React from "react";
+import { Link } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 // import { FiBell } from "react-icons/fi";
 const Header = () => {
+  const { isAuthenticated } = useAuth();
   return (
     <>
       <div className="w-full h-16 bg-gray-950 text-white flex justify-between px-5 py-5">
-        <div className="flex gap-2 logo">
+        <Link to="/" className="flex gap-2 logo">
           <img className="w-9" src="/movie-recording.png" />
           <h5 className=" font-extrabold">TMDB</h5>
+        </Link>
+        <div className="notification">
+          {!isAuthenticated && <Link
+            to="/login"
+            className="flex items-center text-sm gap-3.5 font-medium p-2 rounded-md bg-violet-800 focus:ring-1 hover:bg-violet-950 focus:bg-violet-950"
+          >
+            Login
+          </Link>}
         </div>
         {/* <div className="notification">
           <FiBell />

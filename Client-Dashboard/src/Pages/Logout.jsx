@@ -10,7 +10,7 @@ const Logout = () => {
 
   const logout = () => {
     removeToken();
-    navigate("/login");
+    navigate("/");
   };
 
   return (

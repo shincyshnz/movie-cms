@@ -58,7 +58,7 @@ const Login = () => {
       // Store Access Token in localstorage
       if (response.status === 200) {
         storeToken(response.data.accessToken); 
-        navigate("/" , {replace :true});
+        navigate("/dashboard" , {replace :true});
       }
     } catch (error) {
       handleErrorObj("apiError", error.message);

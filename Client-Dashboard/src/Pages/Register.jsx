@@ -66,8 +66,6 @@ const Register = () => {
     if (errorObj.length > 0) return;
 
     try {
-      const toastId = toast.loading("Please Wait...");
-
       const response = await axios(
         `${import.meta.env.VITE_AUTH_URL}/register`,
         {
@@ -77,20 +75,15 @@ const Register = () => {
       );
 
       if (response.status === 200) {
-        toast.update(toastId, {
-          render: response.data.message,
-          type: "success",
-          isLoading: false,
-          autoClose: 3000
-        });
-        navigate("/login" , {replace :true});
+        toast.success("Account created Successfully.Please Login!")
+        navigate("/login");
       }
 
     } catch (error) {
       toast.dismiss();
       handleErrorObj(
         "apiError",
-        `${error.message} ${error.response?.data.message}`
+        `${error.response?.data.message}`
       );
     }
   };
@@ -190,18 +183,6 @@ const Register = () => {
       <p className="text-center text-gray-500 text-xs">
         &copy;2023 TMDB Corp. All rights reserved.
       </p>
-      <ToastContainer
-        position="top-right"
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="dark"
-      />
     </div>
   );
 };
