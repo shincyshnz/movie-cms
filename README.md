@@ -5,20 +5,20 @@ TMDB is a web app built using React, Express and MongoDB. This app helps users t
 # Working Video : 
 ![Video](https://github.com/shincyshnz/movie-cms/blob/main/Untitled.mp4)
 
-# Add Genre
-![image](https://github.com/shincyshnz/movie-cms/assets/48871950/0c2d4a21-1fbd-45c2-a3b3-b778249749b3)
-
-# Add Movie
-![image](https://github.com/shincyshnz/movie-cms/assets/48871950/38f68b41-1ca4-42d0-bebc-8d1716d89f3c)
-
-# Dashboard
-![Screenshot from 2023-08-29 12-50-01](https://github.com/shincyshnz/movie-cms/assets/48871950/e14631ab-c757-4e56-8af1-ec6f269aa588)
-
 # Login
 ![Screenshot from 2023-08-29 12-48-00](https://github.com/shincyshnz/movie-cms/assets/48871950/a590b2f7-6a09-42c3-9e86-c247b66fbc90)
 
 # Register
 ![Screenshot from 2023-08-29 12-48-35](https://github.com/shincyshnz/movie-cms/assets/48871950/4ecc3787-e7ef-43ab-a036-ff7bdc79e0e1)
+
+# Dashboard
+![Screenshot from 2023-08-29 12-50-01](https://github.com/shincyshnz/movie-cms/assets/48871950/e14631ab-c757-4e56-8af1-ec6f269aa588)
+
+# Add Genre
+![image](https://github.com/shincyshnz/movie-cms/assets/48871950/0c2d4a21-1fbd-45c2-a3b3-b778249749b3)
+
+# Add Movie
+![image](https://github.com/shincyshnz/movie-cms/assets/48871950/38f68b41-1ca4-42d0-bebc-8d1716d89f3c)
 
 # Watch Later
 ![Screenshot from 2023-08-29 12-50-51](https://github.com/shincyshnz/movie-cms/assets/48871950/09e57e2a-1569-4a2b-ad59-ae91d8cb0556)
