@@ -3,6 +3,7 @@ import { useError } from "../context/ErrorContext";
 import Error from "../components/Error";
 import axios from "axios";
 import Genre from "../components/Genre";
+import { toast } from "react-toastify";
 
 const AddGenre = () => {
   const [genre, setGenre] = useState("");
@@ -55,10 +56,14 @@ const AddGenre = () => {
         name: genre,
       };
       setGenreList((prev) => [...prev, newGenre]);
+      toast.success("Genre Added Succesfully!");
       setGenre("");
     } catch (error) {
       deleteErrorObj("apiError");
-      handleErrorObj("apiError", `${error.message} : Error while submitting genre data`);
+      handleErrorObj(
+        "apiError",
+        `${error.message} : Error while submitting genre data`
+      );
     }
   };
 
@@ -82,29 +87,33 @@ const AddGenre = () => {
 
     try {
       const response = await axios(import.meta.env.VITE_GENRE_URL, {
-      method: "PUT",
-      data: {
-        _id: isEdit,
-        name: genre,
-      },
-    });
+        method: "PUT",
+        data: {
+          _id: isEdit,
+          name: genre,
+        },
+      });
 
-    if (!response) return;
+      if (!response) return;
 
-    const newGenreList = genreList;
-    newGenreList.map((item) => {
-      if (item._id === isEdit) {
-        item.name = genre;
-      }
-      return [...genreList];
-    });
-    setGenreList(newGenreList);
-
-    setGenre("");
-    setIsEdit("");
-  }catch(error){
-    deleteErrorObj("apiError");
-    handleErrorObj("apiError", `${error.message} : Error while editing genre data`);}
+      const newGenreList = genreList;
+      newGenreList.map((item) => {
+        if (item._id === isEdit) {
+          item.name = genre;
+        }
+        return [...genreList];
+      });
+      setGenreList(newGenreList);
+      toast.success("Genre Updated Succesfully!");
+      setGenre("");
+      setIsEdit("");
+    } catch (error) {
+      deleteErrorObj("apiError");
+      handleErrorObj(
+        "apiError",
+        `${error.message} : Error while editing genre data`
+      );
+    }
   };
 
   const handleDelete = async (e, _id) => {
@@ -129,9 +138,13 @@ const AddGenre = () => {
         }
       });
       setGenreList(newGenreList);
+      toast.success("Genre Deleted Succesfully!");
     } catch (error) {
       deleteErrorObj("apiError");
-      handleErrorObj("apiError", `${error.message} : Error while deleting genre data`);
+      handleErrorObj(
+        "apiError",
+        `${error.message} : Error while deleting genre data`
+      );
     }
   };
 
@@ -168,8 +181,8 @@ const AddGenre = () => {
         );
       })}
       {errorObj?.map((err, index) => {
-            return err.apiError && <Error errorKey="apiError" key={index} />;
-          })}
+        return err.apiError && <Error errorKey="apiError" key={index} />;
+      })}
       <div className="border  border-gray-700 border-b-2 mb-8"></div>
       <Genre
         genreList={genreList}
