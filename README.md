@@ -14,6 +14,16 @@ TMDB is a web app built using React, Express and MongoDB. This app helps users t
 # Dashboard
 ![image](https://github.com/shincyshnz/movie-cms/assets/48871950/9e8e2dff-dfa4-4104-8c20-6b9858575039)
 
+# Login
+![Screenshot from 2023-08-29 12-48-00](https://github.com/shincyshnz/movie-cms/assets/48871950/a590b2f7-6a09-42c3-9e86-c247b66fbc90)
+
+# Register
+![Screenshot from 2023-08-29 12-48-35](https://github.com/shincyshnz/movie-cms/assets/48871950/4ecc3787-e7ef-43ab-a036-ff7bdc79e0e1)
+
+# Watch Later
+![Screenshot from 2023-08-29 12-50-51](https://github.com/shincyshnz/movie-cms/assets/48871950/09e57e2a-1569-4a2b-ad59-ae91d8cb0556)
+
+
 # Features
 
 ## Dashboard
