@@ -61,7 +61,7 @@ const Login = () => {
         navigate("/dashboard" , {replace :true});
       }
     } catch (error) {
-      handleErrorObj("apiError", error.message);
+      handleErrorObj("apiError", error.response.data?.message || error.message);
     }
   };
 
