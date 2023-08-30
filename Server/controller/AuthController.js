@@ -3,7 +3,7 @@ const { generatedPasswordHash, comparePasswordHash } = require("../utils/bcrypt"
 const { generateAccessToken } = require("../utils/jwt");
 
 const register = async (req, res) => {
-    const { email, password } = req.body;
+    const { username, email, password } = req.body;
     const SALT = 10;
 
     // Check if user exists, if not store use data in to db with hashed password 
@@ -13,7 +13,7 @@ const register = async (req, res) => {
             return res.status(404).json({ message: "User already exists" });
         }
         const hashedPass = await generatedPasswordHash(password, SALT);
-        await Users.create({ email, password: hashedPass })
+        await Users.create({ email, username, password: hashedPass })
 
         res.json({
             message: "Account has been created"
@@ -101,7 +101,7 @@ const watchLater = async (req, res) => {
 const deleteWatchLater = async (req, res) => {
     const { movieId } = req.params;
     const { userId } = req.body;
-    
+
     try {
         const removedMovieId = await Users.findByIdAndUpdate(
             userId,

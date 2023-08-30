@@ -10,6 +10,7 @@ const Register = () => {
   const navigate = useNavigate();
 
   const [input, setInput] = useState({
+    username : "",
     email: "",
     password: "",
     confirmPassword: "",
@@ -34,6 +35,11 @@ const Register = () => {
     deleteErrorObj("confirmPassword");
 
     switch (name) {
+      case "username":
+        !value &&
+            handleErrorObj(name, "Please enter a valid username.");
+        break;
+
       case "email":
         const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
         !value ||
@@ -91,6 +97,27 @@ const Register = () => {
   return (
     <div className="w-full min-h-screen max-w-xs m-auto pt-16">
       <form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+      <div className="mb-4">
+          <label
+            className="block text-gray-700 text-sm font-bold mb-2"
+            htmlFor="username"
+          >
+            Username
+          </label>
+          <input
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            id="username"
+            name="username"
+            type="username"
+            placeholder="Username"
+            value={input.username}
+            onChange={onInputChange}
+            onBlur={validateInput}
+          />
+          {errorObj?.map((err, index) => {
+            return err.username && <Error errorKey="username" key={index} />;
+          })}
+        </div>
         <div className="mb-4">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"

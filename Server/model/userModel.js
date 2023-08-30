@@ -1,6 +1,12 @@
 const mongoose = require("mongoose");
 
 const userSchema = new mongoose.Schema({
+    username: {
+        type: String,
+        trim: true,
+        required: [true, "Username field cannot be empty"],
+        unique: [true, "Email Already exists"],
+    },
     email: {
         type: String,
         trim: true,
