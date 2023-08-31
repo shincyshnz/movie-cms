@@ -11,7 +11,7 @@ const checkAuth = (req, res, next) => {
 
         const validToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET_KEY);
         if (!validToken) {
-            res.status(404).json({
+            res.status(401).json({
                 message: "Unauthorized Access!"
             });
         }
@@ -19,7 +19,7 @@ const checkAuth = (req, res, next) => {
         next();
 
     } catch (error) {
-        res.status(404).json({
+        res.status(401).json({
             message: error.message
         });
     }

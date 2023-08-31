@@ -7,7 +7,7 @@ const Header = () => {
   return (
     <>
       <div className="w-full h-16 bg-gray-950 text-white flex justify-between px-5 py-5">
-        <Link to="/" className="flex gap-2 logo">
+        <Link to="/dashboard" className="flex gap-2 logo">
           <img className="w-9" src="/movie-recording.png" />
           <h5 className=" font-extrabold">TMDB - ADMIN PANEL</h5>
         </Link>

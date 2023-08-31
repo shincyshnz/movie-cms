@@ -5,6 +5,7 @@ const connectDb = require("./config/db");
 const genreRoutes = require("./routes/genreRoutes");
 const moviesRoutes = require("./routes/moviesRoutes");
 const authRoutes = require("./routes/authRoutes");
+const checkAuth = require("./middlware/checkAuth");
 const app = express();
 
 app.use(cors());

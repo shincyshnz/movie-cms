@@ -44,7 +44,7 @@ const Logout = () => {
                     type="button"
                     onClick={() => {
                       setShowModal(false);
-                      navigate("/");
+                      navigate("/dashboard");
                     }}
                   >
                     Close

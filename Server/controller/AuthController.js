@@ -92,7 +92,7 @@ const watchLater = async (req, res) => {
             .sort({ watchLaer: -1 });
         res.json(watchLaterMovies.watchLater);
     } catch (error) {
-        res.status(404).json({
+        res.json({
             message: error.message
         });
     }
