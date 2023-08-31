@@ -10,7 +10,7 @@ const Logout = () => {
 
   const logout = () => {
     removeToken();
-    navigate("/");
+    navigate(`${import.meta.env.VITE_BASE_MOVIEAPP_URL}/login`);
   };
 
   return (

@@ -32,28 +32,10 @@ const MovieCard = ({ movie, setMovieList, movieList, isWatchLater }) => {
     setShowModal(false);
 
     try {
-      let response;
-      if (isWatchLater) {
-        //Delete from watchlater
-        const watchLaterMovies = movieList.map((mov) => mov._id);
-        response = await axios(
-          `${import.meta.env.VITE_AUTH_URL}/watch-later/${id}`,
-          {
-            method: "DELETE",
-            headers: {
-              accessToken: getToken(),
-            },
-            data: {
-              watchLaterMovies: watchLaterMovies,
-            },
-          }
-        );
-      } else {
         //Delete from dashboard
-        response = await axios.delete(
+        const response = await axios.delete(
           `${import.meta.env.VITE_MOVIES_URL}/${id}`
         );
-      }
 
       if (response.status === 200) {
         const newMovieList = movieList.filter((movie) => movie._id !== id);
@@ -66,32 +48,6 @@ const MovieCard = ({ movie, setMovieList, movieList, isWatchLater }) => {
     }
   };
 
-  const addTowishList = async (e) => {
-    e.preventDefault();
-    if (!isAuthenticated) {
-      return navigate("/login");
-    }
-    try {
-      const response = await axios(
-        `${import.meta.env.VITE_AUTH_URL}/watch-later`,
-        {
-          method: "PUT",
-          headers: {
-            accesstoken: getToken(),
-          },
-          data: {
-            movieId: _id,
-          },
-        }
-      );
-
-      if (response.status === 200) {
-        toast.success( "Added to watch later Succesfully...");
-      }
-    } catch (error) {
-      toast.error(error.response?.data?.message)
-    }
-  };
 
   return (
     <Fragment>
@@ -127,25 +83,16 @@ const MovieCard = ({ movie, setMovieList, movieList, isWatchLater }) => {
 
           {isAuthenticated && (
             <div className="flex gap-2 flex-wrap item text-gray-400 justify-end px-5 text-2xl">
-              {!isWatchLater && (
                 <MdModeEditOutline
                   className="hover:opacity-70 cursor-pointer"
                   id={_id}
                   onClick={handleEdit}
                 />
-              )}
               <MdDeleteOutline
                 className="hover:opacity-70 cursor-pointer"
                 id={_id}
                 onClick={() => setShowModal(true)}
               />
-              {!isWatchLater && (
-                <MdOutlineWatchLater
-                  className="hover:opacity-70 cursor-pointer"
-                  id={_id}
-                  onClick={addTowishList}
-                />
-              )}
             </div>
           )}
         </div>

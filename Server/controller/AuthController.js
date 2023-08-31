@@ -31,7 +31,7 @@ const login = async (req, res) => {
     try {
         const user = await Users.findOne({ email });
         if (!user) {
-            return res.status(404).json({ message: "Username/Paswword is not valid!" });
+            return res.status(404).json({ message: "User doesnot exists.!" });
         }
 
         const validPassword = await comparePasswordHash(password, user.password);

@@ -3,7 +3,7 @@ import { useError } from "../context/ErrorContext";
 import Error from "../components/Error";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const Register = () => {

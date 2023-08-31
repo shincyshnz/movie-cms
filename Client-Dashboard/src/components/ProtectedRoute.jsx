@@ -5,10 +5,9 @@ import SideBar from "./SideBar";
 
 const ProtectedRoute = ({ children }) => {
   const { isAuthenticated } = useAuth();
-  console.log(isAuthenticated);
   
   if (!isAuthenticated) {
-    return <Navigate to="/" replace />;
+    return <Navigate to="/login" replace />;
   }
 
   return (
