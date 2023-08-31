@@ -5,7 +5,7 @@ import { useError } from "../context/ErrorContext";
 import { useAuth } from "../context/AuthContext";
 import Skeleton from "../components/Skeleton";
 
-const Dashboard = ({ isWatchLater = false }) => {
+const Dashboard = ({ isWatchLater =false }) => {
   const { errorObj, handleErrorObj, deleteErrorObj } = useError();
 
   const [isLoading, setIsLoading] = useState(false);

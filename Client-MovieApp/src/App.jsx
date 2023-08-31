@@ -28,31 +28,18 @@ function App() {
           theme="dark"
         />
         <Routes>
-          <Route
-            path="/"
-            element={<Dashboard setIsWatchLater={setIsWatchLater} />}
-          ></Route>
           <Route path="/login" element={<Login />}></Route>
           <Route path="/register" element={<Register />}></Route>
           
           <Route element={<ProtectedRoute />}>
-            <Route
-              path="/dashboard"
-              element={<Dashboard setIsWatchLater={setIsWatchLater} />}
-            ></Route>
+            <Route path="/" element={<Dashboard />}></Route>
+            <Route path="/dashboard" element={<Dashboard />}></Route>
             <Route
               path="/watch-later"
-              element={
-                <Dashboard
-                  isWatchLater={isWatchLater}
-                  setIsWatchLater={setIsWatchLater}
-                />
-              }
+              element={<Dashboard isWatchLater={isWatchLater} />}
             ></Route>
             <Route path="/logout" element={<Logout />}></Route>
           </Route>
-
-          <Route path="/*" element={<Login />}></Route>
         </Routes>
       </div>
     </>

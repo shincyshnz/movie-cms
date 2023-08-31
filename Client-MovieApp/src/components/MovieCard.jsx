@@ -1,9 +1,6 @@
 import React, { Fragment, useState } from "react";
 import RatingStars from "./RatingStars";
-import {
-  MdErrorOutline,
-  MdOutlineWatchLater,
-} from "react-icons/md";
+import { MdErrorOutline, MdOutlineWatchLater, MdDeleteOutline } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useAuth } from "../context/AuthContext";
@@ -24,26 +21,26 @@ const MovieCard = ({ movie, setMovieList, movieList, isWatchLater }) => {
 
     try {
       let response;
-        //Delete from watchlater
-        const watchLaterMovies = movieList.map((mov) => mov._id);
-        response = await axios(
-          `${import.meta.env.VITE_AUTH_URL}/watch-later/${id}`,
-          {
-            method: "DELETE",
-            headers: {
-              accessToken: getToken(),
-            },
-            data: {
-              watchLaterMovies: watchLaterMovies,
-            },
-          }
-        );
+      //Delete from watchlater
+      const watchLaterMovies = movieList.map((mov) => mov._id);
+      response = await axios(
+        `${import.meta.env.VITE_AUTH_URL}/watch-later/${id}`,
+        {
+          method: "DELETE",
+          headers: {
+            accessToken: getToken(),
+          },
+          data: {
+            watchLaterMovies: watchLaterMovies,
+          },
+        }
+      );
 
       if (response.status === 200) {
         const newMovieList = movieList.filter((movie) => movie._id !== id);
         setMovieList(newMovieList);
 
-        toast.success("Deleted Succesfully.")
+        toast.success("Deleted Succesfully.");
       }
     } catch (error) {
       toast.error(error.message);
@@ -70,10 +67,10 @@ const MovieCard = ({ movie, setMovieList, movieList, isWatchLater }) => {
       );
 
       if (response.status === 200) {
-        toast.success( "Added to watch later Succesfully...");
+        toast.success("Added to watch later Succesfully...");
       }
     } catch (error) {
-      toast.error(error.response?.data?.message)
+      toast.error(error.response?.data?.message);
     }
   };
 
@@ -111,11 +108,17 @@ const MovieCard = ({ movie, setMovieList, movieList, isWatchLater }) => {
 
           {isAuthenticated && (
             <div className="flex gap-2 flex-wrap item text-gray-400 justify-end px-5 text-2xl">
-              {!isWatchLater && (
+              {!isWatchLater ? (
                 <MdOutlineWatchLater
                   className="hover:opacity-70 cursor-pointer"
                   id={_id}
                   onClick={addTowishList}
+                />
+              ) : (
+                <MdDeleteOutline
+                  className="hover:opacity-70 cursor-pointer"
+                  id={_id}
+                  onClick={() => setShowModal(true)}
                 />
               )}
             </div>
