@@ -11,7 +11,7 @@ const Dashboard = ({ isWatchLater = false }) => {
 
   const [isLoading, setIsLoading] = useState(false);
   const [movieList, setMovieList] = useState([]);
-  const { getToken } = useAuth();
+  const { getToken,removeToken } = useAuth();
   // const abortController = useRef(new AbortController());
 
   const fetchMovies = async () => {
@@ -37,7 +37,7 @@ const Dashboard = ({ isWatchLater = false }) => {
       setMovieList((prev) => (prev = response?.data));
     } catch (error) {
       if (error.response.status === 401) {
-        console.log(error);
+        removeToken();
         window.location.href = "/login" 
       }
       deleteErrorObj("apiError");

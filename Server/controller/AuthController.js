@@ -1,6 +1,6 @@
 const { Users } = require("../model/userModel");
 const { generatedPasswordHash, comparePasswordHash } = require("../utils/bcrypt");
-const { generateAccessToken } = require("../utils/jwt");
+const { generateAccessToken, generateRefreshToken } = require("../utils/jwt");
 
 const register = async (req, res) => {
     const { username, email, password } = req.body;
@@ -41,8 +41,15 @@ const login = async (req, res) => {
 
         // Generate Access Token
         const accessToken = generateAccessToken(user._id);
+        // Generate Refresh Token
+        const refreshToken = generateRefreshToken(user._id);
+        console.log(refreshToken);
 
-        res.status(200).json({ _id: user._id, email: user.email, accessToken });
+        res.cookie("refreshToken",refreshToken,{
+            httpOnly : true,
+            secure : true,
+        })
+        res.json({ _id: user._id, email: user.email, accessToken });
 
     } catch (error) {
         res.status(404).json({

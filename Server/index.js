@@ -5,11 +5,16 @@ const connectDb = require("./config/db");
 const genreRoutes = require("./routes/genreRoutes");
 const moviesRoutes = require("./routes/moviesRoutes");
 const authRoutes = require("./routes/authRoutes");
-const checkAuth = require("./middlware/checkAuth");
+const cookieParser = require("cookie-parser");
 const app = express();
 
-app.use(cors());
+app.use(cors({
+    // Specifying domain of frontend to store refresh token as httpOnly cookie
+    origin : ["http://localhost","http://localhost:5173","http://localhost:5174"],
+    credentials : true,
+}));
 app.use(express.json());
+app.use(cookieParser());
 
 connectDb();
 

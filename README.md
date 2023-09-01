@@ -68,4 +68,5 @@ Users can login to TMDB application using email and password. JWT is used for au
 - Multer
 - Bcrypt
 - JWT
+- Cookie Parser
 
