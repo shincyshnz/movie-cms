@@ -43,7 +43,6 @@ const login = async (req, res) => {
         const accessToken = generateAccessToken(user._id);
         // Generate Refresh Token
         const refreshToken = generateRefreshToken(user._id);
-        console.log(refreshToken);
 
         res.cookie("refreshToken",refreshToken,{
             httpOnly : true,

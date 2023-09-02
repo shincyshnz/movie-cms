@@ -17,7 +17,6 @@ app.use(express.json());
 app.use(cookieParser());
 
 connectDb();
-
 app.use('/api/genre', genreRoutes);
 app.use('/api/movies', moviesRoutes);
 app.use('/api/auth', authRoutes);

@@ -53,6 +53,8 @@ const Login = () => {
       const response = await axios(`${import.meta.env.VITE_AUTH_URL}/login`, {
         method: "POST",
         data: input,
+        // To make the refresh token strored inside cookie
+        withCredentials :true,
       });
 
       // Store Access Token in localstorage
