@@ -6,7 +6,7 @@ import { useError } from "../context/ErrorContext";
 import { useAuth } from "../context/AuthContext";
 import Skeleton from "../components/Skeleton";
 
-const Dashboard = ({ isWatchLater = false}) => {
+const Dashboard = ({ isWatchLater = false }) => {
   const { errorObj, handleErrorObj, deleteErrorObj } = useError();
 
   const [isLoading, setIsLoading] = useState(false);
@@ -17,29 +17,24 @@ const Dashboard = ({ isWatchLater = false}) => {
   const fetchMovies = async () => {
     try {
       let response;
+      setMovieList([]);
+
+      // Watch later movie list
       if (isWatchLater) {
-        // Watch later movie list
-        setMovieList([]);
         // method: "GET",
         // headers: {
         //   accessToken: getToken(),
         // },
         // signal: abortController.current.signal,
-        response = await axiosInstance("/watch-later");
+        response = await axiosInstance("/watch-later", {
+          withCredentials: true,
+        });
       } else {
         // dashboard movie list
-     
-        setMovieList([]);
-        response = await axios(import.meta.env.VITE_MOVIES_URL,{
-          // signal: abortController.current.signal,
-        });
+        response = await axios(import.meta.env.VITE_MOVIES_URL, {});
       }
       setMovieList((prev) => (prev = response?.data));
     } catch (error) {
-      if (error.response.status === 401) {
-        // removeToken();
-        window.location.href = "/login";
-      }
       deleteErrorObj("apiError");
       handleErrorObj(
         "apiError",

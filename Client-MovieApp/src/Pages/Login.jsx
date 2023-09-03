@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import Error from "../components/Error";
 import axios from "axios";
 import { useAuth } from "../context/AuthContext";
+import { axiosInstance } from "../utils/Interceptors";
 // import { axiosInstance } from "../utils/Interceptors";
 
 const Login = () => {
@@ -15,7 +16,7 @@ const Login = () => {
 
   const { errorObj, handleErrorObj, deleteErrorObj } = useError();
   const navigate = useNavigate();
-  
+
   const onInputChange = (e) => {
     const { name, value } = e.target;
     validateInput(e);
@@ -52,7 +53,7 @@ const Login = () => {
 
     try {
       // const response = await axiosInstance("/login", {
-      const response = await axios(`${import.meta.env.VITE_AUTH_URL}/login`, {
+      const response = await axiosInstance("/login", {
         method: "POST",
         withCredentials: true,
         data: input,
