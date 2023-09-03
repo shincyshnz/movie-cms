@@ -2,14 +2,17 @@ import React, { useState } from "react";
 import { MdWarningAmber } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+// import axios from "axios";
+// import { axiosInstance } from "../utils/Interceptors";
 
 const Logout = () => {
   const navigate = useNavigate();
   const { removeToken } = useAuth();
   const [showModal, setShowModal] = useState(true);
 
-  const logout = () => {
+  const logout = async() => {
     removeToken();
+    // await axiosInstance("/logout");
     navigate("/");
   };
 

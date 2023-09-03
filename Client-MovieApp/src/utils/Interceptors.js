@@ -11,9 +11,13 @@ export const axiosInstance = axios.create({
 // 401 - Unauthorized
 axiosInstance.interceptors.response.use(
     (response) => response,
-    (error) => {
-        if (error.status == 401) {
+    async (error) => {
+        if (error.response.status === 401) {
             localStorage.clear();
+            // const response = await axiosInstance("/refresh-token");
+            // localStorage.setItem("x-token", response.data.accessToken);
+            // window.location.reload();
+            window.location.href = "/login";
         }
         return Promise.reject(error);
     });
@@ -23,9 +27,11 @@ axiosInstance.interceptors.request.use(
     (request) => {
         const token = localStorage.getItem("x-token");
         if (token) {
+            // To make the refresh token stored inside cookie we specify withCredentials: true
+            request.withCredentials = true;
             request.headers.accessToken = token;
         }
-    return request;
+        return request;
     },
     (error) => error
 );

@@ -6,12 +6,12 @@ import { useError } from "../context/ErrorContext";
 import { useAuth } from "../context/AuthContext";
 import Skeleton from "../components/Skeleton";
 
-const Dashboard = ({ isWatchLater = false }) => {
+const Dashboard = ({ isWatchLater = false}) => {
   const { errorObj, handleErrorObj, deleteErrorObj } = useError();
 
   const [isLoading, setIsLoading] = useState(false);
   const [movieList, setMovieList] = useState([]);
-  const { getToken,removeToken } = useAuth();
+
   // const abortController = useRef(new AbortController());
 
   const fetchMovies = async () => {
@@ -20,25 +20,25 @@ const Dashboard = ({ isWatchLater = false }) => {
       if (isWatchLater) {
         // Watch later movie list
         setMovieList([]);
-        response = await axiosInstance("/watch-later",
-          // {
-          //   // method: "GET",
-          //   // headers: {
-          //   //   accessToken: getToken(),
-          //   // },
-          //   signal: abortController.current.signal,
-          // }
-        );
+        // method: "GET",
+        // headers: {
+        //   accessToken: getToken(),
+        // },
+        // signal: abortController.current.signal,
+        response = await axiosInstance("/watch-later");
       } else {
         // dashboard movie list
+     
         setMovieList([]);
-        response = await axios(import.meta.env.VITE_MOVIES_URL);
+        response = await axios(import.meta.env.VITE_MOVIES_URL,{
+          // signal: abortController.current.signal,
+        });
       }
       setMovieList((prev) => (prev = response?.data));
     } catch (error) {
       if (error.response.status === 401) {
-        removeToken();
-        window.location.href = "/login" 
+        // removeToken();
+        window.location.href = "/login";
       }
       deleteErrorObj("apiError");
       handleErrorObj(
@@ -69,7 +69,7 @@ const Dashboard = ({ isWatchLater = false }) => {
           })}
         </p>
       )}
-      {isLoading ? (
+      {isLoading && (
         <>
           <Skeleton />
           <Skeleton />
@@ -78,9 +78,8 @@ const Dashboard = ({ isWatchLater = false }) => {
           <Skeleton />
           <Skeleton />
         </>
-      ) : movieList.length < 1 ? (
-        <p className="text-white text-xl mx-auto my-10"> Movie List Empty </p>
-      ) : (
+      )}
+      {movieList.length > 0 &&
         movieList?.map((movie) => {
           return (
             <MovieCard
@@ -91,8 +90,7 @@ const Dashboard = ({ isWatchLater = false }) => {
               isWatchLater={isWatchLater}
             />
           );
-        })
-      )}
+        })}
 
       {/* {errorObj?.map((err, index) => {
         return err.apiError && <Error errorKey="apiError" key={index} />;

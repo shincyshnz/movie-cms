@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import Error from "../components/Error";
 import axios from "axios";
 import { useAuth } from "../context/AuthContext";
+// import { axiosInstance } from "../utils/Interceptors";
 
 const Login = () => {
   const { storeToken } = useAuth();
@@ -14,7 +15,7 @@ const Login = () => {
 
   const { errorObj, handleErrorObj, deleteErrorObj } = useError();
   const navigate = useNavigate();
-
+  
   const onInputChange = (e) => {
     const { name, value } = e.target;
     validateInput(e);
@@ -50,17 +51,17 @@ const Login = () => {
     if (errorObj.length > 0) return;
 
     try {
+      // const response = await axiosInstance("/login", {
       const response = await axios(`${import.meta.env.VITE_AUTH_URL}/login`, {
         method: "POST",
+        withCredentials: true,
         data: input,
-        // To make the refresh token strored inside cookie
-        withCredentials :true,
       });
 
       // Store Access Token in localstorage
       if (response.status === 200) {
-        storeToken(response.data.accessToken); 
-        navigate("/dashboard" , {replace :true});
+        storeToken(response.data.accessToken);
+        navigate("/dashboard", { replace: true });
       }
     } catch (error) {
       handleErrorObj("apiError", error.response?.message || error.message);
@@ -90,7 +91,6 @@ const Login = () => {
           {errorObj?.map((err, index) => {
             return err.email && <Error errorKey="email" key={index} />;
           })}
-
         </div>
         <div className="mb-6">
           <label
@@ -111,9 +111,9 @@ const Login = () => {
             autoComplete="off"
           />
           {errorObj?.map((err, index) => {
-            if(err.apiError){
+            if (err.apiError) {
               return err.apiError && <Error errorKey="apiError" key={index} />;
-            }           
+            }
             return err.password && <Error errorKey="password" key={index} />;
           })}
         </div>

@@ -1,6 +1,6 @@
 const { Users } = require("../model/userModel");
 const { generatedPasswordHash, comparePasswordHash } = require("../utils/bcrypt");
-const { generateAccessToken, generateRefreshToken } = require("../utils/jwt");
+const { generateAccessToken, generateRefreshToken, verifyRefreshToken } = require("../utils/jwt");
 
 const register = async (req, res) => {
     const { username, email, password } = req.body;
@@ -44,9 +44,9 @@ const login = async (req, res) => {
         // Generate Refresh Token
         const refreshToken = generateRefreshToken(user._id);
 
-        res.cookie("refreshToken",refreshToken,{
-            httpOnly : true,
-            secure : true,
+        res.cookie("refreshToken", refreshToken, {
+            httpOnly: true,
+            secure: true,
         })
         res.json({ _id: user._id, email: user.email, accessToken });
 
@@ -127,4 +127,33 @@ const deleteWatchLater = async (req, res) => {
     }
 };
 
-module.exports = { register, login, watchLater, addWatchLater, deleteWatchLater };
+const refreshToken = async (req, res) => {
+    // refresh token
+    console.log(req.cookies.refreshToken, "====req.cookies.refreshToken");
+
+    const userId = verifyRefreshToken(req.cookies.refreshToken);
+
+    if (!userId) {
+        return res.status(401).json({
+            message: "Refresh Token has expired!."
+        });
+    };
+
+    // Generate Access Token
+    const accessToken = generateAccessToken(userId);
+    // Generate Refresh Token
+    const refreshToken = generateRefreshToken(userId);
+
+    res.cookie("refreshToken", refreshToken, {
+        httpOnly: true,
+        secure: true,
+    });
+    res.json({ accessToken });
+};
+
+const logout = async (req, res) => {
+    res.clearCookie("refreshToken");
+    res.json({ message: "Logged Out" });
+ };
+
+module.exports = { register, login, watchLater, addWatchLater, deleteWatchLater, refreshToken ,logout };
