@@ -7,6 +7,7 @@ import { useAuth } from "../context/AuthContext";
 import { toast } from "react-toastify";
 
 const MovieCard = ({ movie, setMovieList, movieList, isWatchLater }) => {
+
   const navigate = useNavigate();
   const { isAuthenticated, getToken } = useAuth();
   const [showModal, setShowModal] = useState(false);
@@ -76,7 +77,7 @@ const MovieCard = ({ movie, setMovieList, movieList, isWatchLater }) => {
 
   return (
     <Fragment>
-      <div className="bg-slate-900 rounded-2xl md:flex  md:max-h-96">
+      <div className="bg-slate-900 rounded-2xl md:flex  md:max-h-80">
         <img
           src={url}
           alt={`${title}-poster`}
@@ -104,7 +105,7 @@ const MovieCard = ({ movie, setMovieList, movieList, isWatchLater }) => {
             })}
           </div>
 
-          <RatingStars rating={rating} />
+          <RatingStars rating={rating} clickable={false}/>
 
           {isAuthenticated && (
             <div className="flex gap-2 flex-wrap item text-gray-400 justify-end px-5 text-2xl">

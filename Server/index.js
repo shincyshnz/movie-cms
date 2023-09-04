@@ -7,16 +7,16 @@ const moviesRoutes = require("./routes/moviesRoutes");
 const authRoutes = require("./routes/authRoutes");
 const cookieParser = require("cookie-parser");
 const app = express();
+connectDb();
 
+app.use(express.json());
 app.use(cors({
     // Specifying domain of frontend to store refresh token as httpOnly cookie
     origin : ["http://localhost","http://localhost:5173","http://localhost:5174"],
     credentials : true,
 }));
-app.use(express.json());
 app.use(cookieParser());
 
-connectDb();
 app.use('/api/genre', genreRoutes);
 app.use('/api/movies', moviesRoutes);
 app.use('/api/auth', authRoutes);

@@ -14,10 +14,10 @@ axiosInstance.interceptors.response.use(
     async (error) => {
         if (error.response.status === 401) {
             localStorage.clear();
-            // const response = await axiosInstance("/refresh-token");
-            // localStorage.setItem("x-token", response.data.accessToken);
-            // window.location.reload();
-            window.location.href = "/login";
+            const response = await axiosInstance("/refresh-token");
+            localStorage.setItem("x-token", response.data.accessToken);
+            window.location.reload();
+            // window.location.href = "/login";
         }
         return Promise.reject(error);
     });

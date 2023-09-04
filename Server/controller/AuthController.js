@@ -129,31 +129,40 @@ const deleteWatchLater = async (req, res) => {
 
 const refreshToken = async (req, res) => {
     // refresh token
-    console.log(req.cookies.refreshToken, "====req.cookies.refreshToken");
-
-    const userId = verifyRefreshToken(req.cookies.refreshToken);
-
-    if (!userId) {
-        return res.status(401).json({
-            message: "Refresh Token has expired!."
+    console.log(req.cookies["refreshtoken"], "====req.cookies.refreshToken");
+    console.log(req.headers['Host'], "====Host");
+    try {
+        if (!req.cookies.refreshToken) {
+            throw new Error("Refresh token not found in the cookie.");
+          }
+        const userId = verifyRefreshToken(req.cookies.refreshToken);
+    
+        if (!userId) {
+            return res.status(401).json({
+                message: "Refresh Token has expired!."
+            });
+        };
+    
+        // Generate Access Token
+        const accessToken = generateAccessToken(userId);
+        // Generate Refresh Token
+        const refreshToken = generateRefreshToken(userId);
+    
+        res.cookie("refreshToken", refreshToken, {
+            httpOnly: true,
+            secure: true,
         });
-    };
-
-    // Generate Access Token
-    const accessToken = generateAccessToken(userId);
-    // Generate Refresh Token
-    const refreshToken = generateRefreshToken(userId);
-
-    res.cookie("refreshToken", refreshToken, {
-        httpOnly: true,
-        secure: true,
-    });
-    res.json({ accessToken });
+        res.json({ accessToken });
+    } catch (error) {
+        res.status(401).json({
+            message : "Refresh token not found in the cookie."
+        })
+    }
 };
 
 const logout = async (req, res) => {
     res.clearCookie("refreshToken");
     res.json({ message: "Logged Out" });
- };
+};
 
-module.exports = { register, login, watchLater, addWatchLater, deleteWatchLater, refreshToken ,logout };
+module.exports = { register, login, watchLater, addWatchLater, deleteWatchLater, refreshToken, logout };

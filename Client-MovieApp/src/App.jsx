@@ -30,13 +30,17 @@ function App() {
         <Routes>
           <Route path="/login" element={<Login />}></Route>
           <Route path="/register" element={<Register />}></Route>
-          
+          <Route
+              path="/"
+              element={<Dashboard isWatchLater={false} />}
+            ></Route>
+
+            
           <Route element={<ProtectedRoute />}>
-            <Route path="/" element={<Dashboard isWatchLater={false}/>}></Route>
             <Route path="/dashboard" element={<Dashboard />}></Route>
             <Route
               path="/watch-later"
-              element={<Dashboard isWatchLater={isWatchLater}/>}
+              element={<Dashboard isWatchLater={isWatchLater} />}
             ></Route>
             <Route path="/logout" element={<Logout />}></Route>
           </Route>
