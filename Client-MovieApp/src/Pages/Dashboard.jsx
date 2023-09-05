@@ -20,6 +20,7 @@ const Dashboard = ({ isWatchLater = false }) => {
   const [movieList, setMovieList] = useState([]);
   const [allMovieList, setAllMovieList] = useState([]);
   const [genreList, setGenreList] = useState([]);
+  const ref = useRef(null);
 
   // const abortController = useRef(new AbortController());
 
@@ -66,12 +67,15 @@ const Dashboard = ({ isWatchLater = false }) => {
 
   const fetchFilteredMovies = async () => {
     try {
-      const response = await axios(`${import.meta.env.VITE_MOVIES_URL}/filter-genre`,{
-        method : "POST",
-        data : filterRequirements
-      });
-      console.log(response.data.length);
-      if(response.data.length === 0){
+      const response = await axios(
+        `${import.meta.env.VITE_MOVIES_URL}/filter-genre`,
+        {
+          method: "POST",
+          data: filterRequirements,
+        }
+      );
+
+      if (response.data.length === 0) {
         setMovieList((prev) => (prev = allMovieList.reverse()));
       }
       setMovieList((prev) => (prev = response?.data));
@@ -91,20 +95,26 @@ const Dashboard = ({ isWatchLater = false }) => {
     // };
   }, [isWatchLater]);
 
+  const clearStar = () => {
+    const allStars = document.querySelectorAll(".svg");
+    Object.values(allStars).forEach((star) => {
+      star.classList.remove("text-yellow-400");
+      star.classList.add("text-gray-500");
+    });
+  };
+
+  const clearSelectedGenres = (tempGenreList) => {
+    genreId = selectOption.removedValue.value;
+    const newArr = tempGenreList.splice(tempGenreList.indexOf(genreId), 1);
+    return newArr;
+  };
+
   const updateFilterRequirements = (req, value) => {
     const newfilter = filterRequirements;
     newfilter[req] = value;
     setFilterRequirements((prev) => (prev = newfilter));
     fetchFilteredMovies();
   };
-
-  const clearStars = ()=>{
-    const allStars = document.querySelectorAll(".svg");
-    Object.values(allStars).forEach((star) => {
-      star.classList.remove("text-yellow-400");
-      star.classList.add("text-gray-500");
-    });
-  }
 
   // filter movies based on rating
   const handleRatingFilter = (e) => {
@@ -117,7 +127,8 @@ const Dashboard = ({ isWatchLater = false }) => {
 
     // push rating data to filterRequirement
     updateFilterRequirements("rating", +selectedRating + 1);
-    clearStars();
+
+    clearStar();
 
     for (let i = 0; i <= selectedRating; i++) {
       const belowStars = document.querySelector(`.svg-${i}`);
@@ -126,30 +137,35 @@ const Dashboard = ({ isWatchLater = false }) => {
     }
   };
 
-   //filter movies based on Gneres
-   const handleGenreFilter = (event, selectOption) => {
+  //filter movies based on Gneres
+  const handleGenreFilter = (event, selectOption) => {
     let tempGenreList = [];
     let genreId;
     tempGenreList = filterRequirements.genreArr;
 
-    if (selectOption.action == "remove-value") {
-      genreId = selectOption.removedValue.value;
-      const removedGenre = tempGenreList.splice(tempGenreList.indexOf(genreId),1);
-      // setFilterRequirements(prev=> { genreArr : tempGenreList});
+    if (selectOption.action == "clear") {
+      tempGenreList = [];
+    }
 
-    } else {
+    if (selectOption.action == "remove-value") {
+      tempGenreList = clearSelectedGenres(tempGenreList, selectOption);
+    }
+    if (selectOption.action == "select-option") {
       genreId = selectOption.option.value;
       tempGenreList.push(genreId);
-      // setFilterRequirements({ genreArr : tempGenreList});
     }
-    updateFilterRequirements('genreArr',tempGenreList);
+    updateFilterRequirements("genreArr", tempGenreList);
+  };
 
+  const handleFilterClear = (e) => {
+    window.location.reload();
   };
 
   return (
     <div className="flex flex-col justify-center items-start w-full">
-      <div className="flex justify-end my-10 gap-4 xl:px-48 w-full">
+      <div className="flex justify-end my-9 gap-2 md:px-10 xl:px-48 w-full border-black border-b pb-4">
         <MultiSelect
+          ref={ref}
           genreList={genreList}
           handleGenreFilter={handleGenreFilter}
         />
@@ -160,6 +176,15 @@ const Dashboard = ({ isWatchLater = false }) => {
             clickable={clickable}
             handleRatingFilter={handleRatingFilter}
           />
+        </div>
+
+        <div className="mt-2">
+          <button
+            className="m-0 text-white px-2 rounded-md bg-violet-800 focus:ring-1 hover:bg-violet-950 focus:bg-violet-950"
+            onClick={handleFilterClear}
+          >
+            Clear
+          </button>
         </div>
       </div>
 
@@ -185,10 +210,10 @@ const Dashboard = ({ isWatchLater = false }) => {
                 isWatchLater={isWatchLater}
               />
             );
-          })) : (
-            <p className="text-white text-2xl">Sorry!, No Movies</p>
-          )
-        }
+          })
+        ) : (
+          <p className="text-white text-2xl">Sorry!, No Movies</p>
+        )}
 
         {/* {errorObj?.map((err, index) => {
         return err.apiError && <Error errorKey="apiError" key={index} />;
