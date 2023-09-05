@@ -11,7 +11,14 @@ const Dashboard = ({ isWatchLater = false }) => {
   const { errorObj, handleErrorObj, deleteErrorObj } = useError();
 
   const [isLoading, setIsLoading] = useState(false);
+  const [clickable, setClickable] = useState(true);
+  const [filterRequirements, setFilterRequirements] = useState({
+    rating: 0,
+    genreArr: [],
+  });
+
   const [movieList, setMovieList] = useState([]);
+  const [allMovieList, setAllMovieList] = useState([]);
   const [genreList, setGenreList] = useState([]);
 
   // const abortController = useRef(new AbortController());
@@ -36,6 +43,7 @@ const Dashboard = ({ isWatchLater = false }) => {
         response = await axios(import.meta.env.VITE_MOVIES_URL, {});
       }
       setMovieList((prev) => (prev = response?.data));
+      setAllMovieList((prev) => (prev = response?.data));
     } catch (error) {
       deleteErrorObj("apiError");
       handleErrorObj(
@@ -56,6 +64,22 @@ const Dashboard = ({ isWatchLater = false }) => {
     }
   };
 
+  const fetchFilteredMovies = async () => {
+    try {
+      const response = await axios(`${import.meta.env.VITE_MOVIES_URL}/filter-genre`,{
+        method : "POST",
+        data : filterRequirements
+      });
+      console.log(response.data.length);
+      if(response.data.length === 0){
+        setMovieList((prev) => (prev = allMovieList.reverse()));
+      }
+      setMovieList((prev) => (prev = response?.data));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     setIsLoading(true);
     fetchMovies();
@@ -67,13 +91,75 @@ const Dashboard = ({ isWatchLater = false }) => {
     // };
   }, [isWatchLater]);
 
-  return (
-    <div className="flex flex-col justify-center">
-      <div className="flex justify-end align-middle m-10 gap-4 px-12 xl:px-48">
-        <MultiSelect genreList={genreList} />
+  const updateFilterRequirements = (req, value) => {
+    const newfilter = filterRequirements;
+    newfilter[req] = value;
+    setFilterRequirements((prev) => (prev = newfilter));
+    fetchFilteredMovies();
+  };
 
-        <div className="ratings mt-3">
-          <RatingStars rating={0} clickable={true}/>
+  const clearStars = ()=>{
+    const allStars = document.querySelectorAll(".svg");
+    Object.values(allStars).forEach((star) => {
+      star.classList.remove("text-yellow-400");
+      star.classList.add("text-gray-500");
+    });
+  }
+
+  // filter movies based on rating
+  const handleRatingFilter = (e) => {
+    e.preventDefault();
+
+    if (!clickable) return;
+
+    const selectedStar = e.currentTarget;
+    const selectedRating = selectedStar.getAttribute("id");
+
+    // push rating data to filterRequirement
+    updateFilterRequirements("rating", +selectedRating + 1);
+    clearStars();
+
+    for (let i = 0; i <= selectedRating; i++) {
+      const belowStars = document.querySelector(`.svg-${i}`);
+      belowStars.classList.remove("text-gray-500");
+      belowStars.classList.add("text-yellow-400");
+    }
+  };
+
+   //filter movies based on Gneres
+   const handleGenreFilter = (event, selectOption) => {
+    let tempGenreList = [];
+    let genreId;
+    tempGenreList = filterRequirements.genreArr;
+
+    if (selectOption.action == "remove-value") {
+      genreId = selectOption.removedValue.value;
+      const removedGenre = tempGenreList.splice(tempGenreList.indexOf(genreId),1);
+      // setFilterRequirements(prev=> { genreArr : tempGenreList});
+
+    } else {
+      genreId = selectOption.option.value;
+      tempGenreList.push(genreId);
+      // setFilterRequirements({ genreArr : tempGenreList});
+    }
+    updateFilterRequirements('genreArr',tempGenreList);
+
+  };
+
+  return (
+    <div className="flex flex-col justify-center items-start w-full">
+      <div className="flex justify-end my-10 gap-4 xl:px-48 w-full">
+        <MultiSelect
+          genreList={genreList}
+          handleGenreFilter={handleGenreFilter}
+        />
+
+        <div className="filter-ratings mt-3">
+          <RatingStars
+            rating={0}
+            clickable={clickable}
+            handleRatingFilter={handleRatingFilter}
+          />
         </div>
       </div>
 
@@ -88,7 +174,7 @@ const Dashboard = ({ isWatchLater = false }) => {
             <Skeleton />
           </>
         )}
-        {movieList.length > 0 &&
+        {movieList.length > 0 ? (
           movieList?.map((movie) => {
             return (
               <MovieCard
@@ -99,7 +185,10 @@ const Dashboard = ({ isWatchLater = false }) => {
                 isWatchLater={isWatchLater}
               />
             );
-          })}
+          })) : (
+            <p className="text-white text-2xl">Sorry!, No Movies</p>
+          )
+        }
 
         {/* {errorObj?.map((err, index) => {
         return err.apiError && <Error errorKey="apiError" key={index} />;

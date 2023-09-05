@@ -14,7 +14,7 @@ function App() {
   return (
     <>
       <Header />
-      <div className="flex min-h-screen">
+      <div className="flex min-h-screen justify-center items-start w-full">
         <ToastContainer
           position="top-right"
           autoClose={3000}

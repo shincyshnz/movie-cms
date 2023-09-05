@@ -84,6 +84,49 @@ const deleteMovies = async (req, res) => {
     }
 };
 
+//filter movies based on filter requirements
+const filterMovies = async (req, res) => {
+    const { rating, genreArr } = req.body;
+    let movieList;
+    
+    try {
+        if (rating && genreArr.length > 0){
+            movieList = await movieModel.find({
+                rating: {
+                    $gte: rating
+                },
+                genres: {
+                    $in: genreArr
+                }
+            })
+                .populate("genres")
+                .sort("rating");
+        }else if(rating){
+            movieList = await movieModel.find({
+                rating: {
+                    $gte: rating
+                }
+            })
+                .populate("genres")
+                .sort("rating");
+        }else{
+            movieList = await movieModel.find({
+                genres: {
+                    $in: genreArr
+                }
+            })
+                .populate("genres")
+                .sort("rating");
+        }
+            
+        res.json(movieList);
+    } catch (error) {
+        res.json({
+            message: error.message,
+        });
+    }
+};
+
 module.exports = {
-    movieById, movies, addMovies, editMovies, deleteMovies
+    movieById, movies, addMovies, editMovies, deleteMovies, filterMovies
 };
