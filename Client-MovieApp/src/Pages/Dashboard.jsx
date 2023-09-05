@@ -103,12 +103,6 @@ const Dashboard = ({ isWatchLater = false }) => {
     });
   };
 
-  const clearSelectedGenres = (tempGenreList) => {
-    genreId = selectOption.removedValue.value;
-    const newArr = tempGenreList.splice(tempGenreList.indexOf(genreId), 1);
-    return newArr;
-  };
-
   const updateFilterRequirements = (req, value) => {
     const newfilter = filterRequirements;
     newfilter[req] = value;
@@ -148,8 +142,10 @@ const Dashboard = ({ isWatchLater = false }) => {
     }
 
     if (selectOption.action == "remove-value") {
-      tempGenreList = clearSelectedGenres(tempGenreList, selectOption);
+      genreId = selectOption.removedValue.value;
+      tempGenreList.splice(tempGenreList.indexOf(genreId), 1);
     }
+
     if (selectOption.action == "select-option") {
       genreId = selectOption.option.value;
       tempGenreList.push(genreId);
