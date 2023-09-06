@@ -77,11 +77,11 @@ const MovieCard = ({ movie, setMovieList, movieList, isWatchLater }) => {
 
   return (
     <Fragment>
-      <div className="bg-slate-900 rounded-2xl md:flex  md:max-h-80">
+      <div className="bg-slate-900 rounded-2xl md:flex md:max-w-m md:max-h-80 ">
         <img
           src={url}
           alt={`${title}-poster`}
-          className="md:w-1/3 rounded-t-2xl md:rounded-l-2xl md:rounded-t-none md:rounded-tl-2xl"
+          className=" sm:max-w-sm md:w-1/3 rounded-t-2xl md:rounded-l-2xl md:rounded-t-none md:rounded-tl-2xl"
         />
         <div className="px-5 py-10 text-gray-600 my-auto">
           <h2 className="font-bold text-xl sm:text-lg md:text-3xl mb-3">
