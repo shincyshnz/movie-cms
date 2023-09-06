@@ -5,15 +5,18 @@ import { axiosInstance } from "../utils/Interceptors";
 import { useError } from "../context/ErrorContext";
 import Skeleton from "../components/Skeleton";
 import { Filter } from "../components/Filter";
+import { Pagination } from "../components/Paginate/Pagination";
 
 const Dashboard = ({ isWatchLater = false }) => {
   const { errorObj, handleErrorObj, deleteErrorObj } = useError();
+  // const abortController = useRef(new AbortController());
 
   const [isLoading, setIsLoading] = useState(false);
   const [movieList, setMovieList] = useState([]);
   const [allMovieList, setAllMovieList] = useState([]);
 
-  // const abortController = useRef(new AbortController());
+  const [pageCount, setPageCount] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
 
   const fetchMovies = async () => {
     try {
@@ -32,10 +35,17 @@ const Dashboard = ({ isWatchLater = false }) => {
         });
       } else {
         // dashboard movie list
-        response = await axios(import.meta.env.VITE_MOVIES_URL);
+        response = await axios(import.meta.env.VITE_MOVIES_URL, {
+          params: {
+            page: currentPage,
+            limit: 2,
+          },
+        });
       }
-      setMovieList((prev) => (prev = response?.data));
-      setAllMovieList((prev) => (prev = response?.data));
+
+      setMovieList((prev) => (prev = response?.data.movieList));
+      setPageCount((prev) => (prev = Math.ceil(response.data.pageCount)));
+      // setAllMovieList((prev) => (prev = response?.data.movieList));
     } catch (error) {
       deleteErrorObj("apiError");
       handleErrorObj(
@@ -59,9 +69,11 @@ const Dashboard = ({ isWatchLater = false }) => {
 
   return (
     <div className="flex flex-col justify-center items-start w-full px-5 md:px-10 xl:px-0">
-      {!isWatchLater && <Filter setMovieList={setMovieList} allMovieList={allMovieList} />}
+      {!isWatchLater && (
+        <Filter setMovieList={setMovieList} allMovieList={allMovieList} />
+      )}
 
-      <div className="xl:py-10 xl:px-48 grid-cols-1 lg:grid-cols-2 gap-x-16 gap-y-2 min-h-max grid">
+      <div className="xl:py-5 xl:px-48 grid-cols-1 lg:grid-cols-2 gap-x-16 gap-y-2 min-h-max grid">
         {isLoading && (
           <>
             <Skeleton />
@@ -88,7 +100,15 @@ const Dashboard = ({ isWatchLater = false }) => {
           <p className="text-white text-2xl">Sorry! No Movies</p>
         )}
       </div>
-    </div>
+
+        <Pagination
+          setMovieList={setAllMovieList}
+          pageCount={pageCount}
+          setPageCount={setPageCount}
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
+        />
+      </div>
   );
 };
 

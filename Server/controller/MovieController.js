@@ -15,9 +15,19 @@ const movieById = async (req, res) => {
 
 // Get Movies 
 const movies = async (req, res) => {
+    const { page, limit } = req.query;
     try {
-        const movieList = await movieModel.find().populate("genres").sort('-createdAt');
-        res.json(movieList);
+        //const movieList = await movieModel.find().populate("genres").sort('-createdAt');
+
+        // Page limit
+        const movieList = await movieModel.find().populate("genres").sort('-createdAt').limit(limit);
+        const moviesCount = await movieModel.find().count({});
+        const pageCount = moviesCount / limit;
+        //
+        res.json({
+            movieList,
+            pageCount,
+        });
     } catch (error) {
         res.json({
             message: error.message,
@@ -117,6 +127,19 @@ const filterMovies = async (req, res) => {
     }
 };
 
+// Get Movies count
+const countMovies = async (req, res) => {
+    try {
+        const movieList = await movieModel.find().count();
+        res.json(moviesCount);
+    } catch (error) {
+        res.json({
+            message: error.message,
+        });
+    }
+};
+
+
 module.exports = {
-    movieById, movies, addMovies, editMovies, deleteMovies, filterMovies
+    movieById, movies, addMovies, editMovies, deleteMovies, filterMovies, countMovies
 };

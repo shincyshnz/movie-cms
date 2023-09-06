@@ -21,7 +21,7 @@ export const Filter = ({ allMovieList, setMovieList }) => {
       const response = await axios(import.meta.env.VITE_GENRE_URL);
       setGenreList((prev) => (prev = response?.data));
     } catch (error) {
-      console.log(error);
+      toast.error(error.message);
     }
   };
 
@@ -40,7 +40,7 @@ export const Filter = ({ allMovieList, setMovieList }) => {
       }
       setMovieList((prev) => (prev = response?.data));
     } catch (error) {
-      console.log(error);
+      toast.error(error.message);
     }
   };
 
@@ -107,14 +107,14 @@ export const Filter = ({ allMovieList, setMovieList }) => {
   };
 
   return (
-    <div className="flex flex-col md:flex-row justify-end my-3 md:my-9 gap-2 sm:px-10 xl:px-48 w-full border-black border-b pb-4">
+    <div className="flex flex-col md:flex-row justify-end my-3 sm:px-10 xl:px-48 w-full border-black border-b pb-4 gap-2">
       <MultiSelect
         ref={ref}
         genreList={genreList}
         handleGenreFilter={handleGenreFilter}
       />
 
-      <div className="filter-ratings mt-3">
+      <div className="filter-ratings mt-2">
         <RatingStars
           rating={0}
           clickable={clickable}
