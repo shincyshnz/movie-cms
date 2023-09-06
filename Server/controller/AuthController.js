@@ -96,7 +96,9 @@ const watchLater = async (req, res) => {
                 populate: { path: 'genres', select: 'name' }
             })
             .sort({ watchLaer: -1 });
-        res.json(watchLaterMovies.watchLater);
+        res.json({
+            movieList: watchLaterMovies.watchLater
+        });
     } catch (error) {
         res.json({
             message: error.message
@@ -134,20 +136,20 @@ const refreshToken = async (req, res) => {
     try {
         if (!req.cookies.refreshToken) {
             throw new Error("Refresh token not found in the cookie.");
-          }
+        }
         const userId = verifyRefreshToken(req.cookies.refreshToken);
-    
+
         if (!userId) {
             return res.status(401).json({
                 message: "Refresh Token has expired!."
             });
         };
-    
+
         // Generate Access Token
         const accessToken = generateAccessToken(userId);
         // Generate Refresh Token
         const refreshToken = generateRefreshToken(userId);
-    
+
         res.cookie("refreshToken", refreshToken, {
             httpOnly: true,
             secure: true,
@@ -155,7 +157,7 @@ const refreshToken = async (req, res) => {
         res.json({ accessToken });
     } catch (error) {
         res.status(401).json({
-            message : "Refresh token not found in the cookie."
+            message: "Refresh token not found in the cookie."
         })
     }
 };

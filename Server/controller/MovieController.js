@@ -18,12 +18,16 @@ const movies = async (req, res) => {
     const { page, limit } = req.query;
     try {
         //const movieList = await movieModel.find().populate("genres").sort('-createdAt');
+        let skip = 0;
+        if (page > 1) {
+            skip = +limit * (page-1);
+        }
 
         // Page limit
-        const movieList = await movieModel.find().populate("genres").sort('-createdAt').limit(limit);
+        const movieList = await movieModel.find().populate("genres").sort('-createdAt').skip(skip).limit(limit);
         const moviesCount = await movieModel.find().count({});
         const pageCount = moviesCount / limit;
-        //
+        
         res.json({
             movieList,
             pageCount,

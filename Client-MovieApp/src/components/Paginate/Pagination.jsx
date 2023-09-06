@@ -6,36 +6,38 @@ import { toast } from "react-toastify";
 
 export const Pagination = ({
   setMovieList,
+  movieList,
   pageCount,
   setPageCount,
-  currentPage,
   setCurrentPage,
 }) => {
-  // Get current Movies
-  //   const indexofLastMovie = currentPage * limit;
-  //   const indexofFirstMovie = indexofLastMovie - limit;
-  //   const currentMovies = response?.data.slice(
-  //     indexofFirstMovie,
-  //     indexofLastMovie
-  //   );
-
-  const handlePageClick = async (e) => {
-    const page = +e.selected + 1;
-    setCurrentPage((prev) => (prev = page));
+  const fetchMovies = async (page) => {
+    const limit = 2;
 
     try {
       const response = await axios(import.meta.env.VITE_MOVIES_URL, {
         params: {
           page,
-          limit: 2,
+          limit: limit,
         },
       });
-      setMovieList((prev) => (prev = response?.data.movieList));
+      setMovieList(response?.data.movieList);
       setPageCount((prev) => (prev = Math.ceil(response.data.pageCount)));
-      
     } catch (error) {
       toast.error(error.message);
     }
+  };
+
+  useEffect(() => {
+    fetchMovies();
+  }, []);
+
+  const handlePageClick = (e) => {
+    const page = +e.selected + 1;
+    console.log(page);
+
+    setCurrentPage((prev) => (prev = page));
+    fetchMovies(page);
   };
 
   return (

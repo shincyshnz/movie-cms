@@ -33,7 +33,8 @@ const Dashboard = ({ isWatchLater = false }) => {
           withCredentials: true,
           // signal: abortController.current.signal,
         });
-      } else {
+      } 
+      else {
         // dashboard movie list
         response = await axios(import.meta.env.VITE_MOVIES_URL, {
           params: {
@@ -41,11 +42,11 @@ const Dashboard = ({ isWatchLater = false }) => {
             limit: 2,
           },
         });
+        setPageCount((prev) => (prev = Math.ceil(response.data.pageCount)));
       }
 
       setMovieList((prev) => (prev = response?.data.movieList));
-      setPageCount((prev) => (prev = Math.ceil(response.data.pageCount)));
-      // setAllMovieList((prev) => (prev = response?.data.movieList));
+      setAllMovieList((prev) => (prev = response?.data.movieList));
     } catch (error) {
       deleteErrorObj("apiError");
       handleErrorObj(
@@ -65,7 +66,7 @@ const Dashboard = ({ isWatchLater = false }) => {
     // return () => {
     //   abortController.current.abort();
     // };
-  }, [isWatchLater]);
+  }, [isWatchLater,currentPage]);
 
   return (
     <div className="flex flex-col justify-center items-start w-full px-5 md:px-10 xl:px-0">
@@ -101,14 +102,16 @@ const Dashboard = ({ isWatchLater = false }) => {
         )}
       </div>
 
+      {!isWatchLater && (
         <Pagination
           setMovieList={setAllMovieList}
+          movieList={movieList}
           pageCount={pageCount}
           setPageCount={setPageCount}
-          currentPage={currentPage}
           setCurrentPage={setCurrentPage}
         />
-      </div>
+      )}
+    </div>
   );
 };
 
