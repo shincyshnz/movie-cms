@@ -54,6 +54,7 @@ export const Filter = ({
   const handleFilterClear = (e) => {
     // window.location.reload();
     ref.current.clearValue();
+    clearStar();
     fetchMovies();
   };
 
