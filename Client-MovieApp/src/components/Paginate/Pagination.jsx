@@ -5,28 +5,10 @@ import axios from "axios";
 import { toast } from "react-toastify";
 
 export const Pagination = ({
-  setMovieList,
-  movieList,
   pageCount,
-  setPageCount,
   setCurrentPage,
+  fetchMovies,
 }) => {
-  const fetchMovies = async (page) => {
-    const limit = 2;
-
-    try {
-      const response = await axios(import.meta.env.VITE_MOVIES_URL, {
-        params: {
-          page,
-          limit: limit,
-        },
-      });
-      setMovieList(response?.data.movieList);
-      setPageCount((prev) => (prev = Math.ceil(response.data.pageCount)));
-    } catch (error) {
-      toast.error(error.message);
-    }
-  };
 
   useEffect(() => {
     fetchMovies();
@@ -34,10 +16,10 @@ export const Pagination = ({
 
   const handlePageClick = (e) => {
     const page = +e.selected + 1;
-    console.log(page);
 
     setCurrentPage((prev) => (prev = page));
-    fetchMovies(page);
+    // fetchMovies(page);
+    fetchMovies();
   };
 
   return (
@@ -47,7 +29,7 @@ export const Pagination = ({
       nextLabel="next >"
       onPageChange={handlePageClick}
       pageRangeDisplayed={5}
-      pageCount={pageCount}
+      pageCount={Math.ceil(pageCount)}
       previousLabel="< prev"
       renderOnZeroPageCount={null}
     />

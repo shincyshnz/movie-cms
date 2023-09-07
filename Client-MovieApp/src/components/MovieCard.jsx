@@ -1,13 +1,16 @@
 import React, { Fragment, useState } from "react";
 import RatingStars from "./RatingStars";
-import { MdErrorOutline, MdOutlineWatchLater, MdDeleteOutline } from "react-icons/md";
+import {
+  MdErrorOutline,
+  MdOutlineWatchLater,
+  MdDeleteOutline,
+} from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useAuth } from "../context/AuthContext";
 import { toast } from "react-toastify";
 
 const MovieCard = ({ movie, setMovieList, movieList, isWatchLater }) => {
-
   const navigate = useNavigate();
   const { isAuthenticated, getToken } = useAuth();
   const [showModal, setShowModal] = useState(false);
@@ -105,25 +108,27 @@ const MovieCard = ({ movie, setMovieList, movieList, isWatchLater }) => {
             })}
           </div>
 
-          <RatingStars rating={rating} clickable={false}/>
+          <div className="flex justify-between">
+            <RatingStars rating={rating} clickable={false} />
 
-          {isAuthenticated && (
-            <div className="flex gap-2 flex-wrap item text-gray-400 justify-end px-5 text-2xl">
-              {!isWatchLater ? (
-                <MdOutlineWatchLater
-                  className="hover:opacity-70 cursor-pointer"
-                  id={_id}
-                  onClick={addTowishList}
-                />
-              ) : (
-                <MdDeleteOutline
-                  className="hover:opacity-70 cursor-pointer"
-                  id={_id}
-                  onClick={() => setShowModal(true)}
-                />
-              )}
-            </div>
-          )}
+            {isAuthenticated && (
+              <div className="flex gap-2 flex-wrap item text-gray-400 justify-end px-5 text-2xl">
+                {!isWatchLater ? (
+                  <MdOutlineWatchLater
+                    className="hover:opacity-70 cursor-pointer"
+                    id={_id}
+                    onClick={addTowishList}
+                  />
+                ) : (
+                  <MdDeleteOutline
+                    className="hover:opacity-70 cursor-pointer"
+                    id={_id}
+                    onClick={() => setShowModal(true)}
+                  />
+                )}
+              </div>
+            )}
+          </div>
         </div>
       </div>
 

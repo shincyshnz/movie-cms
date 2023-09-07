@@ -87,17 +87,31 @@ const addWatchLater = async (req, res) => {
 
 const watchLater = async (req, res) => {
     const { userId } = req.body;
-    try {
+    const { page, limit } = req.query;
 
-        const watchLaterMovies = await Users
-            .findById({ _id: userId })
+    let skip = 0;
+    if (page > 1) {
+        skip = +limit * (page - 1);
+    }
+
+    try {
+        // { watchLater : {$slice : [skip,limit]} } for pagination
+        const userData = await Users
+            .findById({ _id: userId }, { watchLater: { $slice: [+skip, +limit] } })
             .populate({
                 path: 'watchLater',
                 populate: { path: 'genres', select: 'name' }
             })
             .sort({ watchLaer: -1 });
+        const watchLaterMovies = userData.watchLater;
+
+        const watchLaterMoviesCount = (await Users
+        .findById({ _id: userId }).select('watchLater')).watchLater.length;
+        const pageCount = watchLaterMoviesCount / limit;
+
         res.json({
-            movieList: watchLaterMovies.watchLater
+            movieList: watchLaterMovies,
+            pageCount,
         });
     } catch (error) {
         res.json({

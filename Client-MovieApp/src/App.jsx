@@ -8,6 +8,7 @@ import Login from "./Pages/Login";
 import Logout from "./Pages/Logout";
 import { useState } from "react";
 import { ToastContainer } from "react-toastify";
+import WatchLater from "./components/WatchLater";
 
 function App() {
   const [isWatchLater, setIsWatchLater] = useState(true);
@@ -32,7 +33,7 @@ function App() {
           <Route path="/register" element={<Register />}></Route>
           <Route
               path="/"
-              element={<Dashboard isWatchLater={false} />}
+              element={<Dashboard/>}
             ></Route>
 
             
@@ -40,7 +41,7 @@ function App() {
             <Route path="/dashboard" element={<Dashboard />}></Route>
             <Route
               path="/watch-later"
-              element={<Dashboard isWatchLater={isWatchLater} />}
+              element={<WatchLater/>}
             ></Route>
             <Route path="/logout" element={<Logout />}></Route>
           </Route>

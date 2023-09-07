@@ -3,13 +3,14 @@ import MultiSelect from "./MultiSelect";
 import RatingStars from "./RatingStars";
 import axios from "axios";
 
-export const Filter = ({ allMovieList, setMovieList }) => {
+export const Filter = ({
+  setFilterRequirements,
+  filterRequirements,
+  fetchFilteredMovies,
+  fetchMovies,
+}) => {
   const ref = useRef(null);
   const [clickable, setClickable] = useState(true);
-  const [filterRequirements, setFilterRequirements] = useState({
-    rating: 0,
-    genreArr: [],
-  });
   const [genreList, setGenreList] = useState([]);
 
   useEffect(() => {
@@ -24,25 +25,23 @@ export const Filter = ({ allMovieList, setMovieList }) => {
       toast.error(error.message);
     }
   };
+  //   try {
+  //     const response = await axios(
+  //       `${import.meta.env.VITE_MOVIES_URL}/filter-genre`,
+  //       {
+  //         method: "POST",
+  //         data: filterRequirements,
+  //       }
+  //     );
 
-  const fetchFilteredMovies = async () => {
-    try {
-      const response = await axios(
-        `${import.meta.env.VITE_MOVIES_URL}/filter-genre`,
-        {
-          method: "POST",
-          data: filterRequirements,
-        }
-      );
-
-      if (response.data.length === 0 || filterRequirements.length === 0) {
-        setMovieList((prev) => (prev = allMovieList.reverse()));
-      }
-      setMovieList((prev) => (prev = response?.data));
-    } catch (error) {
-      toast.error(error.message);
-    }
-  };
+  //     if (response.data.length === 0 || filterRequirements.length === 0) {
+  //       setMovieList((prev) => (prev = allMovieList.reverse()));
+  //     }
+  //     setMovieList((prev) => (prev = response?.data));
+  //   } catch (error) {
+  //     toast.error(error.message);
+  //   }
+  // };
 
   const clearStar = () => {
     const allStars = document.querySelectorAll(".svg");
@@ -53,7 +52,9 @@ export const Filter = ({ allMovieList, setMovieList }) => {
   };
 
   const handleFilterClear = (e) => {
-    window.location.reload();
+    // window.location.reload();
+    ref.current.clearValue();
+    fetchMovies();
   };
 
   const updateFilterRequirements = (req, value) => {

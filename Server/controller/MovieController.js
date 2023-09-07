@@ -20,14 +20,18 @@ const movies = async (req, res) => {
         //const movieList = await movieModel.find().populate("genres").sort('-createdAt');
         let skip = 0;
         if (page > 1) {
-            skip = +limit * (page-1);
+            skip = +limit * (page - 1);
         }
 
         // Page limit
-        const movieList = await movieModel.find().populate("genres").sort('-createdAt').skip(skip).limit(limit);
+        const movieList = await movieModel.find()
+            .populate("genres")
+            .sort('-createdAt')
+            .skip(skip)
+            .limit(limit);
         const moviesCount = await movieModel.find().count({});
         const pageCount = moviesCount / limit;
-        
+
         res.json({
             movieList,
             pageCount,
@@ -103,27 +107,61 @@ const filterMovies = async (req, res) => {
     const { rating, genreArr } = req.body;
     let movieList;
 
-    try {
-        const movieList = await movieModel.find(rating && genreArr.length > 0 ? {
-            rating: {
-                $gte: rating
-            },
-            genres: {
-                $in: genreArr
-            }
-        } : rating ? {
-            rating: {
-                $gte: rating
-            }
-        } : {
-            genres: {
-                $in: genreArr
-            }
-        })
-            .populate("genres")
-            .sort("rating");
+    // Pagination
+    const { page, limit } = req.query;
+    let skip = 0;
+    if (page > 1) {
+        skip = +limit * (page - 1);
+    }
 
-        res.json(movieList);
+    try {
+        // const movieList = await movieModel.find(rating && genreArr.length > 0 ? {
+        //     rating: {
+        //         $gte: rating
+        //     },
+        //     genres: {
+        //         $in: genreArr
+        //     }
+        // } : rating ? {
+        //     rating: {
+        //         $gte: rating
+        //     }
+        // } : {
+        //     genres: {
+        //         $in: genreArr
+        //     }
+        // })
+        //     .populate("genres")
+        //     .sort("rating")
+        //     .skip(skip)
+        //     .limit(+limit);
+
+        const query = {};
+        if (rating) {
+            query.rating = {
+                $gte: rating
+            }
+        }
+
+        if (genreArr.length > 0) {
+            query.genres = {
+                $in: genreArr
+            }
+        }
+        const movieList = await movieModel.find(query)
+            .populate("genres")
+            .sort("rating")
+            .skip(skip)
+            .limit(limit);
+        
+        // page limit
+        const moviesCount = await movieModel.find(query).count({});
+        const pageCount = moviesCount / limit;
+
+        res.json({
+            movieList: movieList,
+            pageCount,
+        });
     } catch (error) {
         res.json({
             message: error.message,

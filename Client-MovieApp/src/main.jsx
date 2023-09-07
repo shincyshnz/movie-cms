@@ -7,7 +7,7 @@ import { ErrorProvider } from "./context/ErrorContext.jsx";
 import { AuthProvider } from "./context/AuthContext.jsx";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <React.StrictMode>
+  // <React.StrictMode>
     <ErrorProvider>
       <AuthProvider>
         <BrowserRouter>
@@ -15,5 +15,5 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         </BrowserRouter>
       </AuthProvider>
     </ErrorProvider>
-  </React.StrictMode>
+  // </React.StrictMode>
 );

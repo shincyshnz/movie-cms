@@ -6,45 +6,37 @@ import { useError } from "../context/ErrorContext";
 import Skeleton from "../components/Skeleton";
 import { Filter } from "../components/Filter";
 import { Pagination } from "../components/Paginate/Pagination";
+import { toast } from "react-toastify";
 
-const Dashboard = ({ isWatchLater = false }) => {
+const Dashboard = () => {
   const { errorObj, handleErrorObj, deleteErrorObj } = useError();
   // const abortController = useRef(new AbortController());
 
   const [isLoading, setIsLoading] = useState(false);
   const [movieList, setMovieList] = useState([]);
   const [allMovieList, setAllMovieList] = useState([]);
+  const [filterRequirements, setFilterRequirements] = useState({
+    rating: 0,
+    genreArr: [],
+  });
 
   const [pageCount, setPageCount] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
+  const [isFilteredData, setIsFilteredData] = useState(false);
 
   const fetchMovies = async () => {
     try {
-      let response;
       setMovieList([]);
 
-      // Watch later movie list
-      if (isWatchLater) {
-        // method: "GET",
-        // headers: {
-        //   accessToken: getToken(),
-        // },
-        response = await axiosInstance("/watch-later", {
-          withCredentials: true,
-          // signal: abortController.current.signal,
-        });
-      } 
-      else {
-        // dashboard movie list
-        response = await axios(import.meta.env.VITE_MOVIES_URL, {
-          params: {
-            page: currentPage,
-            limit: 2,
-          },
-        });
-        setPageCount((prev) => (prev = Math.ceil(response.data.pageCount)));
-      }
+      // dashboard movie list
+      const response = await axios(import.meta.env.VITE_MOVIES_URL, {
+        params: {
+          page: currentPage,
+          limit: import.meta.env.VITE_PAGINATION_LIMIT,
+        },
+      });
 
+      setPageCount((prev) => (prev = Math.ceil(response.data.pageCount)));
       setMovieList((prev) => (prev = response?.data.movieList));
       setAllMovieList((prev) => (prev = response?.data.movieList));
     } catch (error) {
@@ -58,6 +50,36 @@ const Dashboard = ({ isWatchLater = false }) => {
     }
   };
 
+  const fetchFilteredMovies = async () => {
+    try {
+      setMovieList([]);
+      setPageCount(0);
+      const response = await axios(
+        `${import.meta.env.VITE_MOVIES_URL}/filter-genre`,
+        {
+          method: "POST",
+          data: filterRequirements,
+          params: {
+            page: currentPage,
+            limit: import.meta.env.VITE_PAGINATION_LIMIT,
+          },
+        }
+      );
+
+      if (
+        response.data.movieList.length === 0 ||
+        filterRequirements.length === 0
+      ) {
+        setMovieList((prev) => (prev = allMovieList.reverse()));
+      }
+      setMovieList((prev) => (prev = response?.data.movieList));
+      setPageCount((prev) => (prev = response?.data.pageCount));
+      setIsFilteredData((prev) => (prev = true));
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
   useEffect(() => {
     setIsLoading(true);
     fetchMovies();
@@ -66,19 +88,20 @@ const Dashboard = ({ isWatchLater = false }) => {
     // return () => {
     //   abortController.current.abort();
     // };
-  }, [isWatchLater,currentPage]);
+  }, [currentPage]);
 
   return (
     <div className="flex flex-col justify-center items-start w-full px-5 md:px-10 xl:px-0">
-      {!isWatchLater && (
-        <Filter setMovieList={setMovieList} allMovieList={allMovieList} />
-      )}
+      <Filter
+        fetchFilteredMovies={fetchFilteredMovies}
+        fetchMovies={fetchMovies}
+        filterRequirements={filterRequirements}
+        setFilterRequirements={setFilterRequirements}
+      />
 
       <div className="xl:py-5 xl:px-48 grid-cols-1 lg:grid-cols-2 gap-x-16 gap-y-2 min-h-max grid">
         {isLoading && (
           <>
-            <Skeleton />
-            <Skeleton />
             <Skeleton />
             <Skeleton />
             <Skeleton />
@@ -93,7 +116,7 @@ const Dashboard = ({ isWatchLater = false }) => {
                 movie={movie}
                 setMovieList={setMovieList}
                 movieList={movieList}
-                isWatchLater={isWatchLater}
+                isWatchLater={false}
               />
             );
           })
@@ -102,15 +125,16 @@ const Dashboard = ({ isWatchLater = false }) => {
         )}
       </div>
 
-      {!isWatchLater && (
-        <Pagination
-          setMovieList={setAllMovieList}
-          movieList={movieList}
-          pageCount={pageCount}
-          setPageCount={setPageCount}
-          setCurrentPage={setCurrentPage}
-        />
-      )}
+      {/* Checking for filtered data */}
+      {/* {filterRequirements.rating != 0 &&
+        filterRequirements.genreArr.length > 0 &&
+        setIsFilteredData((prev) => (prev = !prev))} */}
+
+      <Pagination
+        pageCount={pageCount}
+        setCurrentPage={setCurrentPage}
+        fetchMovies={!isFilteredData ? fetchMovies : fetchFilteredMovies}
+      />
     </div>
   );
 };
