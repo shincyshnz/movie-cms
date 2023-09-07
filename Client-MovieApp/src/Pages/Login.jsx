@@ -129,7 +129,7 @@ const Login = () => {
           </button>
           <a
             className="inline-block align-baseline font-bold text-sm text-violet-500 hover:text-violet-800"
-            href="#"
+            href="/send-otp"
           >
             Forgot Password?
           </a>

@@ -9,9 +9,9 @@ import Logout from "./Pages/Logout";
 import { useState } from "react";
 import { ToastContainer } from "react-toastify";
 import WatchLater from "./components/WatchLater";
+import SendOTP from "./Pages/SendOTP";
 
 function App() {
-  const [isWatchLater, setIsWatchLater] = useState(true);
   return (
     <>
       <Header />
@@ -31,12 +31,12 @@ function App() {
         <Routes>
           <Route path="/login" element={<Login />}></Route>
           <Route path="/register" element={<Register />}></Route>
+          <Route path="/send-otp" element={<SendOTP />}></Route>
+          <Route path ="/confirm-otp" element={<Login/>}></Route>
           <Route
               path="/"
               element={<Dashboard/>}
             ></Route>
-
-            
           <Route element={<ProtectedRoute />}>
             <Route path="/dashboard" element={<Dashboard />}></Route>
             <Route
