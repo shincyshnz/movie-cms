@@ -181,4 +181,6 @@ const logout = async (req, res) => {
     res.json({ message: "Logged Out" });
 };
 
-module.exports = { register, login, watchLater, addWatchLater, deleteWatchLater, refreshToken, logout };
+const emailVerification = ()=>{};
+
+module.exports = { register, login, watchLater, addWatchLater, deleteWatchLater, refreshToken, logout, emailVerification };

@@ -10,6 +10,7 @@ import { useState } from "react";
 import { ToastContainer } from "react-toastify";
 import WatchLater from "./components/WatchLater";
 import SendOTP from "./Pages/SendOTP";
+import { OTP } from "./components/OTP";
 
 function App() {
   return (
@@ -32,7 +33,7 @@ function App() {
           <Route path="/login" element={<Login />}></Route>
           <Route path="/register" element={<Register />}></Route>
           <Route path="/send-otp" element={<SendOTP />}></Route>
-          <Route path ="/confirm-otp" element={<Login/>}></Route>
+          <Route path ="/confirm-otp" element={<OTP/>}></Route>
           <Route
               path="/"
               element={<Dashboard/>}

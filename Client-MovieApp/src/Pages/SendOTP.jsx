@@ -45,7 +45,7 @@ const SendOTP = () => {
 
   return (
     <div className="max-w-lg mx-auto my-10 bg-white p-8 rounded-xl shadow shadow-slate-300">
-      <h1 className="text-4xl font-medium pb-3">Trouble with logging in?</h1>
+      <h1 className="text-4xl font-medium pb-3">Verify Email</h1>
       <p className="text-slate-500">
         Enter your email address, and we'll send you a link to get back into
         your account.
@@ -106,7 +106,7 @@ const SendOTP = () => {
               href="/register"
               className="text-violet-600 font-medium inline-flex space-x-1 items-center"
             >
-              <span>Register now </span>
+              <span className="ps-1.5"> Register now </span>
               <span>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
