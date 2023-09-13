@@ -1,74 +1,114 @@
-import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
+import axios from "axios";
+import React, { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import ResetPassword from "./ResetPassword";
 
-export const OTP = () => {
-  const inputRef = useRef();
-  const [inputNum, setInputNum] = useState(0);
-  const [otp, setOtp] = useState([]);
-
-  let otpLength = "123456";
+export const OTP = ({ userData }) => {
+  const inputRef = useRef({});
+  const navigate = useNavigate();
+  const [otp, setOtp] = useState({
+    digitOne: "",
+    digitTwo: "",
+    digitThree: "",
+    digitFour: "",
+    digitFive: "",
+    digitSix: "",
+  });
+  const [resetPassword, setResetPassword] = useState(false);
 
   useEffect(() => {
-    const firstChildInput = inputRef.current.firstChild;
-    if (firstChildInput.disabled) {
-      firstChildInput.disabled = false;
-      firstChildInput.focus();
-    }
-  }, [inputNum]);
+    inputRef.current[0].focus();
+  }, []);
 
-  const handleChange = (e) => {
-    e.preventDefault();
-    
-    let number = e.target.value;
-    const parent = inputRef.current;
-    if(number.length > 1){
-        const inputIndex = otp.length;
-        [...parent.children].map((child, index) => {
-          child.disabled = true;
-          if (inputIndex === index) {
-            child.disabled = false;
-            child.focus();
-          }
-        });
-        return; 
-    }
+  const handleChange = (event, index) => {
+    const { name, value } = event.target;
 
-    setInputNum((prev) => (prev = +number));
-    setOtp((prev) => [...prev, +number]);
+    if (/[a-z]/gi.test(value)) return;
+
+    setOtp((prev) => ({
+      ...prev,
+      [name]: value.slice(-1),
+    }));
+
+    if (value && index < 5) {
+      inputRef.current[index + 1].focus();
+    }
   };
 
-  console.log(inputNum);
-  console.log(otp);
+  const handleBackSpace = (event, index) => {
+    if (event.key === "Backspace") {
+      if (index > 0) {
+        inputRef.current[index - 1].focus();
+      }
+    }
+  };
+
+  const renderInputs = () => {
+    return Object.keys(otp).map((keys, index) => (
+      <input
+        className="block mb-2 text-xl font-medium text-gray-900 dark:text-white w-1/6 outline outline-2 outline-gray-400 rounded-sm px-5 py-5 focus:outline-gray-950 disabled:outline-gray-400"
+        type="text"
+        name={keys}
+        ref={(element) => (inputRef.current[index] = element)}
+        key={index}
+        value={otp[keys]}
+        maxLength="1"
+        onChange={(event) => handleChange(event, index)}
+        onKeyUp={(event) => handleBackSpace(event, index)}
+      />
+    ));
+  };
+
+  const handleSubmit = async (event) => {
+    // event.preventDefault();
+
+    const otpFull = Object.values(otp).join("");
+
+    try {
+      // send otp to verify
+      const response = await axios(
+        `${import.meta.env.VITE_AUTH_URL}/verify-otp`,
+        {
+          method: "POST",
+          data: {
+            otp: otpFull,
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        toast.success("Your account has been verified. Reset your password.");
+        setResetPassword((prev) => (prev = true));
+        // navigate("/reset-password", { replace: true });
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
 
   return (
-    <div className="flex flex-col items-center p-5 mt-40 gap-2 bg-white rounded-lg max-h-screen mx-10 md:mx-40 w-full md:w-1/2 xl:w-1/4">
-      <h1 className="text-4xl font-medium pb-3">Verify Email</h1>
-      <p className="text-slate-500">Enter your the OTP send to email.</p>
-      <div className="flex gap-3 justify-center mt-8" ref={inputRef}>
-        {Array.from(otpLength).map((num, index) => {
-          return (
-            <input
-              className="block mb-2 text-xl font-medium text-gray-900 dark:text-white w-1/6 outline outline-2 outline-gray-400 rounded-sm px-5 py-5 focus:outline-gray-950 disabled:outline-gray-400"
-              type="number"
-              name={`otp-${index}`}
-              id={`otp-${index}`}
-              key={index}
-              autoFocus={index === 0}
-              disabled={true}
-              step={1}
-              maxLength={1}
-              autoComplete={"no"}
-              pattern={"d*"}
-              onKeyUp={handleChange}
-            />
-          );
-        })}
-      </div>
-      <button
-        className="w-full bg-violet-800 hover:bg-violet-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-        type="button"
-      >
-        verify OTP
-      </button>
-    </div>
+    <>
+      {resetPassword ? (
+        <ResetPassword userData={userData}/>
+      ) : (
+        <form className="p-5 w-full md:mx-40 md:w-1/2 xl:w-1/4">
+          <div className="flex flex-col items-center p-5 mt-40 md:gap-2 bg-white rounded-lg max-h-screen ">
+            <h1 className="text-4xl font-medium pb-3">Verify Email</h1>
+            <p className="text-slate-500">Enter the OTP send to your email.</p>
+            <div className="flex gap-3 justify-center mt-8">
+              {renderInputs()}
+            </div>
+            <button
+              className="w-full bg-violet-800 hover:bg-violet-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+              type="button"
+              onClick={handleSubmit}
+            >
+              verify OTP
+            </button>
+          </div>
+        </form>
+      )}
+    </>
   );
 };

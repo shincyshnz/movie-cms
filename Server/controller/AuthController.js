@@ -1,10 +1,14 @@
 const { Users } = require("../model/userModel");
 const { generatedPasswordHash, comparePasswordHash } = require("../utils/bcrypt");
 const { generateAccessToken, generateRefreshToken, verifyRefreshToken } = require("../utils/jwt");
+const { sendMailOTP } = require("../utils/nodemailer");
+
+let otp = 0;
+let expireOtp;
+const SALT = 10;
 
 const register = async (req, res) => {
     const { username, email, password } = req.body;
-    const SALT = 10;
 
     // Check if user exists, if not store use data in to db with hashed password 
     try {
@@ -106,7 +110,7 @@ const watchLater = async (req, res) => {
         const watchLaterMovies = userData.watchLater;
 
         const watchLaterMoviesCount = (await Users
-        .findById({ _id: userId }).select('watchLater')).watchLater.length;
+            .findById({ _id: userId }).select('watchLater')).watchLater.length;
         const pageCount = watchLaterMoviesCount / limit;
 
         res.json({
@@ -181,6 +185,82 @@ const logout = async (req, res) => {
     res.json({ message: "Logged Out" });
 };
 
-const emailVerification = ()=>{};
+const emailVerification = async (req, res) => {
+    const { email } = req.body;
+    try {
+        const isEmailExists = await Users.findOne({ email });
+        if (!isEmailExists) {
+            res.status(400).json({
+                message: "Email Doesnot exists!"
+            });
+        }
 
-module.exports = { register, login, watchLater, addWatchLater, deleteWatchLater, refreshToken, logout, emailVerification };
+        // Send otp to existing email 
+        otp = await sendMailOTP(isEmailExists.email, isEmailExists.username);
+
+        if (otp) {
+            expireOtp = setTimeout(() => {
+                otp = 0;
+            }, 20000);
+            res.status(200).json({
+                email: isEmailExists.email,
+                userId: isEmailExists._id,
+            })
+        }
+
+    } catch (error) {
+        res.status(400).json({
+            message: error.message
+        });
+
+    };
+};
+
+const otpVerification = (req, res) => {
+    const otpRecieved = req.body.otp;
+
+    if (otpRecieved === otp) {
+        clearTimeout(expireOtp);
+        res.status(200).json({
+            message: "verified"
+        });
+    } else {
+        res.status(400).json({
+            message: "OTP expired"
+        });
+    }
+
+};
+
+const resetPassword = async (req, res) => {
+    try {
+        const { userId, password } = req.body;
+        const isExists = await Users.findOne({ _id: userId });
+        if (!isExists) {
+            return res.status(404).json({ message: "User Doesnot exists" });
+        }
+        const hashedPass = await generatedPasswordHash(password, SALT);
+        await Users.findByIdAndUpdate({ _id: userId }, { password: hashedPass });
+
+        res.json({
+            message: "Password Updated"
+        });
+    } catch (error) {
+        res.status(400).json({
+            message: error.message
+        });
+    }
+}
+
+module.exports = {
+    register,
+    login,
+    watchLater,
+    addWatchLater,
+    deleteWatchLater,
+    refreshToken,
+    logout,
+    emailVerification,
+    otpVerification,
+    resetPassword
+};

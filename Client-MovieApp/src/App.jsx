@@ -11,6 +11,7 @@ import { ToastContainer } from "react-toastify";
 import WatchLater from "./components/WatchLater";
 import SendOTP from "./Pages/SendOTP";
 import { OTP } from "./components/OTP";
+import ResetPassword from "./components/ResetPassword";
 
 function App() {
   return (
@@ -33,17 +34,11 @@ function App() {
           <Route path="/login" element={<Login />}></Route>
           <Route path="/register" element={<Register />}></Route>
           <Route path="/send-otp" element={<SendOTP />}></Route>
-          <Route path ="/confirm-otp" element={<OTP/>}></Route>
-          <Route
-              path="/"
-              element={<Dashboard/>}
-            ></Route>
+          {/* <Route path ="/reset-password" element={<ResetPassword/>}></Route> */}
+          <Route path="/" element={<Dashboard />}></Route>
           <Route element={<ProtectedRoute />}>
             <Route path="/dashboard" element={<Dashboard />}></Route>
-            <Route
-              path="/watch-later"
-              element={<WatchLater/>}
-            ></Route>
+            <Route path="/watch-later" element={<WatchLater />}></Route>
             <Route path="/logout" element={<Logout />}></Route>
           </Route>
         </Routes>
