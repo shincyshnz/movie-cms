@@ -2,6 +2,8 @@ import axios from "axios";
 import React, { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import ResetPassword from "./ResetPassword";
+import FormContainer from "./FormContainer";
+import Button from "./Button";
 
 export const OTP = ({ userData }) => {
   const inputRef = useRef({});
@@ -61,7 +63,7 @@ export const OTP = ({ userData }) => {
   const renderInputs = () => {
     return Object.keys(otp).map((keys, index) => (
       <input
-        className="block mb-2 text-xl font-medium text-gray-900 dark:text-white w-1/6 outline outline-2 outline-gray-400 rounded-sm px-5 py-5 focus:outline-gray-950 disabled:outline-gray-400"
+        className="block mb-2 text-xl font-medium text-gray-900 w-1/6 outline outline-2 outline-gray-400 rounded-sm px-5 py-5 focus:outline-gray-950 disabled:outline-gray-400"
         type="text"
         name={keys}
         ref={(element) => (inputRef.current[index] = element)}
@@ -78,7 +80,7 @@ export const OTP = ({ userData }) => {
     // event.preventDefault();
 
     const otpFull = Object.values(otp).join("");
-    if(otpFull.length !== 6){
+    if (otpFull.length !== 6) {
       toast.error("OTP field cannot be empty!");
       return;
     }
@@ -142,22 +144,18 @@ export const OTP = ({ userData }) => {
 
   return (
     <>
-      {resetPassword && <ResetPassword userData={userData} />}
-
-      <form className="p-5 w-full md:mx-40 md:w-1/2 xl:w-1/4">
-        <div className="flex flex-col items-center p-5 mt-40 md:gap-2 bg-white rounded-lg max-h-screen ">
+      {resetPassword ? (
+        <ResetPassword userData={userData} />
+      ) : (
+        <FormContainer>
           <h1 className="text-4xl font-medium pb-3">Verify Email</h1>
           <p className="text-slate-500">Enter the OTP send to your email.</p>
-          <div className="flex gap-3 justify-center mt-8">{renderInputs()}</div>
-          <button
-            className="w-full bg-violet-800 hover:bg-violet-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-            type="button"
-            onClick={handleSubmit}
-          >
-            verify OTP
-          </button>
+          <div className="flex gap-3 justify-center mt-8">
+            {renderInputs()}
+          </div>
+          <Button type="button" onClick={handleSubmit} text="Verify OTP" />
           {countDown > 0 ? (
-            <p>
+            <p className="text-center mt-2">
               The OTP will expire in{" "}
               <strong>
                 <span className="text-lg text-red-600">
@@ -166,7 +164,7 @@ export const OTP = ({ userData }) => {
               </strong>
             </p>
           ) : (
-            <p className="text-center">
+            <p className="text-center mt-2">
               Don't recieve code?
               <button
                 onClick={handleResendOtp}
@@ -176,8 +174,9 @@ export const OTP = ({ userData }) => {
               </button>
             </p>
           )}
-        </div>
-      </form>
+        </FormContainer>
+      )}
+
     </>
   );
 };

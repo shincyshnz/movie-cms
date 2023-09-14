@@ -3,15 +3,19 @@ import { useError } from "../context/ErrorContext";
 import Error from "../components/Error";
 import { toast } from "react-toastify";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
 import { OTP } from "../components/OTP";
+import FormContainer from "../components/FormContainer";
+import Input from "../components/Input";
+import Button from "../components/Button";
 
 const SendOTP = () => {
   const { errorObj, handleErrorObj, deleteErrorObj } = useError();
-  const [email, setEmail] = useState("");
+  const [input, setInput] = useState({
+    email: "",
+  });
   const [userData, setUserData] = useState({
-    email:"",
-    id:""
+    email: "",
+    id: "",
   });
   const [isConfirmOTP, setIsConfirmOTP] = useState(false);
 
@@ -21,7 +25,7 @@ const SendOTP = () => {
 
     deleteErrorObj("emailPassword");
 
-    if (!email) {
+    if (!input.email) {
       return handleErrorObj("emailPassword", "Email Cannot be empty");
     }
 
@@ -32,23 +36,25 @@ const SendOTP = () => {
         {
           method: "POST",
           data: {
-            email,
+            email: input.email,
           },
         }
       );
 
       if (response.status === 200) {
-        setUserData(prev=>
-          prev  = {
-          email : response.data.email,
-          id: response.data.userId
-        });
+        setUserData(
+          (prev) =>
+            (prev = {
+              email: response.data.email,
+              id: response.data.userId,
+            })
+        );
 
         toast.update(toastId, {
           render: `An OTP has been send to ${response.data.email}`,
           type: "success",
           isLoading: false,
-          autoClose:2000,
+          autoClose: 2000,
         });
         setIsConfirmOTP((prev) => (prev = true));
       }
@@ -57,94 +63,80 @@ const SendOTP = () => {
     }
   };
 
-  const handleInputChange = (e) => {
-    e.preventDefault();
-    const value = e.target.value;
-    deleteErrorObj("emailPassword");
+  // const handleInputChange = (e) => {
+  //   e.preventDefault();
+  //   const value = e.target.value;
+  //   deleteErrorObj("emailPassword");
 
-    const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
+  //   const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
 
-    if (!value || !emailRegex.test(value)) {
-      return handleErrorObj("emailPassword", "Please enter a valid email");
-    }
-    setEmail((prev) => (prev = value));
-  };
+  //   if (!value || !emailRegex.test(value)) {
+  //     return handleErrorObj("emailPassword", "Please enter a valid email");
+  //   }
+  //   setEmail((prev) => (prev = value));
+  // };
 
   return (
     <>
-      {isConfirmOTP ? <OTP userData ={userData} /> : <div className="max-w-lg mx-auto my-10 bg-white p-8 rounded-xl shadow shadow-slate-300">
-        <h1 className="text-4xl font-medium pb-3">Verify Email</h1>
-        <p className="text-slate-500">
-          Enter your email address, and we'll send you a link to get back into
-          your account.
-        </p>
+      {isConfirmOTP ? (
+        <OTP userData={userData} />
+      ) : (
+        <FormContainer>
+          <h1 className="text-4xl font-medium pb-3">Verify Email</h1>
+          <p className="text-slate-500">
+            Enter your email address, and we'll send you a link to get back into
+            your account.
+          </p>
 
-        <form className="my-10">
-          <div className="flex flex-col space-y-5">
-            <label htmlFor="email">
-              <p className="font-medium text-slate-700 pb-2">Email address</p>
-              <input
-                id="email"
-                name="email"
-                type="email"
-                className="w-full py-3 border border-slate-200 rounded-lg px-3 focus:outline-none focus:border-slate-500 hover:shadow"
-                placeholder="Enter email address"
-                onChange={handleInputChange}
-              />
-            </label>
+          <Input
+            name={"email"}
+            labelName={"Email"}
+            type={"email"}
+            placeholder={"Enter email address"}
+            input={input}
+            setInput={setInput}
+          />
+          {errorObj?.map((err, index) => {
+            return err.email && <Error errorKey="email" key={index} />;
+          })}
 
-            {errorObj?.map((err, index) => {
-              return (
-                err.emailPassword && (
-                  <Error errorKey="emailPassword" key={index} />
-                )
-              );
-            })}
+          <Button type={"button"} onClick={handleSubmit} text={"Send OTP"} />
 
-            <button
-              className="bg-violet-800 hover:bg-violet-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-              type="button"
-              onClick={handleSubmit}
+          <p className="text-center mt-4">
+            Not registered yet?
+            <a
+              href="/register"
+              className="text-violet-600 font-medium inline-flex space-x-1 items-center"
             >
-              Send OTP
-            </button>
-
-            <p className="text-center">
-              Not registered yet?
-              <a
-                href="/register"
-                className="text-violet-600 font-medium inline-flex space-x-1 items-center"
-              >
-                <span className="ps-1.5"> Register now </span>
-                <span>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-4 w-4"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-                    />
-                  </svg>
-                </span>
-              </a>
-            </p>
-            <p className="text-center">
-              <a
-                href="/login"
-                className="text-violet-600 font-medium inline-flex space-x-1 items-center"
-              >
-                <span>Back to Login</span>
-              </a>
-            </p>
-          </div>
-        </form>
-      </div>}
+              <span className="ps-1.5"> Register now </span>
+              <span>
+                <svg
+                  xmlns="http:www.w3.org/2000/svg"
+                  className="h-4 w-4"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                  />
+                </svg>
+              </span>
+            </a>
+          </p>
+          <p className="text-center mt-2">
+            <a
+              href="/login"
+              className="text-violet-600 font-medium inline-flex space-x-1 items-center"
+            >
+              <span>Back to Login</span>
+            </a>
+          </p>
+        </FormContainer>
+      )}
     </>
   );
 };

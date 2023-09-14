@@ -8,7 +8,7 @@ const Input = ({
   placeholder,
   autoComplete = "on",
   input,
-  setInput
+  setInput,
 }) => {
   const { errorObj, handleErrorObj, deleteErrorObj } = useError();
 
@@ -64,7 +64,7 @@ const Input = ({
   return (
     <>
       <label
-        className="block text-gray-700 text-sm font-bold mb-2"
+        className="block mt-4 font-medium text-slate-700 pb-2"
         htmlFor={name}
       >
         {labelName}
@@ -80,6 +80,7 @@ const Input = ({
         onBlur={validateInput}
         autoComplete={autoComplete}
       />
+      
     </>
   );
 };

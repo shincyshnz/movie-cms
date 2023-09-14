@@ -15,7 +15,7 @@ function generateOTP() {
 const sendMailOTP = async (userEmail, userName) => {
 
     const otp = generateOTP();
-    let testAccount = await nodemailer.createTestAccount();
+    // let testAccount = await nodemailer.createTestAccount();
 
     // connect with the smtp
     let transporter = nodemailer.createTransport({

@@ -10,10 +10,10 @@ const Logout = () => {
   const { removeToken } = useAuth();
   const [showModal, setShowModal] = useState(true);
 
-  const logout = async() => {
+  const logout = async () => {
     removeToken();
     // await axiosInstance("/logout");
-    navigate("/");
+    navigate("/", { relplace: true });
   };
 
   return (
