@@ -34,7 +34,7 @@ function App() {
           <Route path="/login" element={<Login />}></Route>
           <Route path="/register" element={<Register />}></Route>
           <Route path="/send-otp" element={<SendOTP />}></Route>
-          {/* <Route path ="/reset-password" element={<ResetPassword/>}></Route> */}
+
           <Route path="/" element={<Dashboard />}></Route>
           <Route element={<ProtectedRoute />}>
             <Route path="/dashboard" element={<Dashboard />}></Route>

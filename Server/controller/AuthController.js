@@ -200,8 +200,9 @@ const emailVerification = async (req, res) => {
 
         if (otp) {
             expireOtp = setTimeout(() => {
-                otp = 0;
-            }, 20000);
+                    otp = 0;
+                },120000); //120000ms == 2minutes
+
             res.status(200).json({
                 email: isEmailExists.email,
                 userId: isEmailExists._id,

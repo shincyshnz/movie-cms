@@ -14,7 +14,6 @@ const SendOTP = () => {
     id:""
   });
   const [isConfirmOTP, setIsConfirmOTP] = useState(false);
-  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -73,7 +72,7 @@ const SendOTP = () => {
 
   return (
     <>
-      {isConfirmOTP ? <OTP userData ={userData}/> : <div className="max-w-lg mx-auto my-10 bg-white p-8 rounded-xl shadow shadow-slate-300">
+      {isConfirmOTP ? <OTP userData ={userData} /> : <div className="max-w-lg mx-auto my-10 bg-white p-8 rounded-xl shadow shadow-slate-300">
         <h1 className="text-4xl font-medium pb-3">Verify Email</h1>
         <p className="text-slate-500">
           Enter your email address, and we'll send you a link to get back into
@@ -101,25 +100,6 @@ const SendOTP = () => {
                 )
               );
             })}
-
-            {/* <button className="w-full py-3 font-medium text-white bg-violet-600 hover:bg-violet-500 rounded-lg border-violet-500 hover:shadow inline-flex space-x-2 items-center justify-center">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth="1.5"
-              stroke="currentColor"
-              className="w-6 h-6"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M15.75 5.25a3 3 0 013 3m3 0a6 6 0 01-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1121.75 8.25z"
-              />
-            </svg>
-
-            <span>Reset password</span>
-          </button> */}
 
             <button
               className="bg-violet-800 hover:bg-violet-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"

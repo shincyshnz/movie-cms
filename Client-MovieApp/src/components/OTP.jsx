@@ -1,24 +1,38 @@
 import axios from "axios";
 import React, { useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import ResetPassword from "./ResetPassword";
 
 export const OTP = ({ userData }) => {
   const inputRef = useRef({});
-  const navigate = useNavigate();
-  const [otp, setOtp] = useState({
+  const [resetPassword, setResetPassword] = useState(false);
+  const initialInput = {
     digitOne: "",
     digitTwo: "",
     digitThree: "",
     digitFour: "",
     digitFive: "",
     digitSix: "",
-  });
-  const [resetPassword, setResetPassword] = useState(false);
+  };
+  const [otp, setOtp] = useState(initialInput);
+
+  const [countDown, setCountDown] = useState(0);
+  const seconds = String(countDown % 60).padStart(2, 0);
+  const minutes = String(Math.floor(countDown / 60)).padStart(2, 0);
+  let timerId;
+
+  const timer = () => {
+    setCountDown(60 * 2);
+    timerId = setInterval(() => {
+      setCountDown((countDown) => countDown - 1);
+    }, 1000);
+  };
 
   useEffect(() => {
     inputRef.current[0].focus();
+    timer();
+
+    return () => clearInterval(timerId);
   }, []);
 
   const handleChange = (event, index) => {
@@ -64,6 +78,10 @@ export const OTP = ({ userData }) => {
     // event.preventDefault();
 
     const otpFull = Object.values(otp).join("");
+    if(otpFull.length !== 6){
+      toast.error("OTP field cannot be empty!");
+      return;
+    }
 
     try {
       // send otp to verify
@@ -80,7 +98,42 @@ export const OTP = ({ userData }) => {
       if (response.status === 200) {
         toast.success("Your account has been verified. Reset your password.");
         setResetPassword((prev) => (prev = true));
-        // navigate("/reset-password", { replace: true });
+      }
+    } catch (error) {
+      error.response.data.message
+        ? toast.error(error.response.data.message)
+        : toast.error(error.message);
+    } finally {
+      clearInterval(timerId);
+      setCountDown(0);
+      setOtp(initialInput);
+    }
+  };
+
+  const handleResendOtp = async (e) => {
+    e.preventDefault();
+
+    try {
+      const toastId = toast.loading("Please wait...");
+      const response = await axios(
+        `${import.meta.env.VITE_AUTH_URL}/send-otp`,
+        {
+          method: "POST",
+          data: {
+            email: userData.email,
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        timer();
+        setOtp(initialInput);
+        toast.update(toastId, {
+          render: `An OTP has been send to ${response.data.email}`,
+          type: "success",
+          isLoading: false,
+          autoClose: 2000,
+        });
       }
     } catch (error) {
       toast.error(error.message);
@@ -89,26 +142,42 @@ export const OTP = ({ userData }) => {
 
   return (
     <>
-      {resetPassword ? (
-        <ResetPassword userData={userData}/>
-      ) : (
-        <form className="p-5 w-full md:mx-40 md:w-1/2 xl:w-1/4">
-          <div className="flex flex-col items-center p-5 mt-40 md:gap-2 bg-white rounded-lg max-h-screen ">
-            <h1 className="text-4xl font-medium pb-3">Verify Email</h1>
-            <p className="text-slate-500">Enter the OTP send to your email.</p>
-            <div className="flex gap-3 justify-center mt-8">
-              {renderInputs()}
-            </div>
-            <button
-              className="w-full bg-violet-800 hover:bg-violet-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-              type="button"
-              onClick={handleSubmit}
-            >
-              verify OTP
-            </button>
-          </div>
-        </form>
-      )}
+      {resetPassword && <ResetPassword userData={userData} />}
+
+      <form className="p-5 w-full md:mx-40 md:w-1/2 xl:w-1/4">
+        <div className="flex flex-col items-center p-5 mt-40 md:gap-2 bg-white rounded-lg max-h-screen ">
+          <h1 className="text-4xl font-medium pb-3">Verify Email</h1>
+          <p className="text-slate-500">Enter the OTP send to your email.</p>
+          <div className="flex gap-3 justify-center mt-8">{renderInputs()}</div>
+          <button
+            className="w-full bg-violet-800 hover:bg-violet-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            type="button"
+            onClick={handleSubmit}
+          >
+            verify OTP
+          </button>
+          {countDown > 0 ? (
+            <p>
+              The OTP will expire in{" "}
+              <strong>
+                <span className="text-lg text-red-600">
+                  {minutes}:{seconds}
+                </span>
+              </strong>
+            </p>
+          ) : (
+            <p className="text-center">
+              Don't recieve code?
+              <button
+                onClick={handleResendOtp}
+                className="text-violet-600 font-medium inline-flex space-x-1 items-center"
+              >
+                <span>Resend OTP</span>
+              </button>
+            </p>
+          )}
+        </div>
+      </form>
     </>
   );
 };
