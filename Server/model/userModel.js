@@ -7,6 +7,10 @@ const userSchema = new mongoose.Schema({
         required: [true, "Username field cannot be empty"],
         unique: [true, "Email Already exists"],
     },
+    userRole: {
+        type: String,
+        default: "user",
+    },
     email: {
         type: String,
         trim: true,
@@ -19,8 +23,8 @@ const userSchema = new mongoose.Schema({
         required: [true, "Password field cannot be empty"]
     },
     watchLater: [{
-        type : mongoose.Schema.Types.ObjectId,
-        ref : "Movies"
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Movies"
     }]
 }, { timestamps: true });
 

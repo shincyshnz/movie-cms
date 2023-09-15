@@ -5,17 +5,21 @@ import SideBar from "./SideBar";
 
 const ProtectedRoute = ({ children }) => {
   const { isAuthenticated } = useAuth();
-  
-  if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
-  }
 
-  return (
-    <>
-      <SideBar />
-      <Outlet />
-    </>
-  );
+  if (isAuthenticated) {
+    if (localStorage.getItem("userRole") === "admin") {
+      return (
+        <>
+          <SideBar />
+          <Outlet />
+        </>
+      );
+    }else {
+      return (window.location.href = "http://localhost:5173/");
+    }
+  } 
+  return <Navigate to="/login" replace />;
+
 };
 
 export default ProtectedRoute;

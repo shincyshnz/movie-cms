@@ -34,7 +34,7 @@ const Dashboard = ({ isWatchLater = false }) => {
         setMovieList([]);
         response = await axios(import.meta.env.VITE_MOVIES_URL);
       }
-      setMovieList((prev) => (prev = response?.data));
+      setMovieList((prev) => (prev = response?.data.movieList));
     } catch (error) {
       if (error.response.status === 401) {
         window.location.href = "/login" 

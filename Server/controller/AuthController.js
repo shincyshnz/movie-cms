@@ -52,7 +52,7 @@ const login = async (req, res) => {
             httpOnly: true,
             secure: true,
         })
-        res.json({ _id: user._id, email: user.email, accessToken });
+        res.json({ _id: user._id, email: user.email, accessToken, userRole : user.userRole });
 
     } catch (error) {
         res.status(404).json({

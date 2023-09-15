@@ -62,6 +62,8 @@ const Login = () => {
       // Store Access Token in localstorage
       if (response.status === 200) {
         storeToken(response.data.accessToken);
+        // save user role in localstorage
+        localStorage.setItem("userRole", response.data.userRole);
         navigate("/dashboard", { replace: true });
       }
     } catch (error) {
