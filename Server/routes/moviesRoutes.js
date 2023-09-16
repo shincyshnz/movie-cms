@@ -1,5 +1,5 @@
 const express = require("express");
-const { movieById, movies, addMovies, editMovies, deleteMovies, filterMovies, countMovies } = require("../controller/MovieController");
+const { movieById, movies, addMovies, editMovies, deleteMovies, filterMovies } = require("../controller/MovieController");
 const { handler } = require("../middlware/upload");
 const router = express.Router();
 

@@ -180,11 +180,11 @@ const AddMovies = () => {
 
   return (
     <div className="mx-auto p-5 sm:my-10 md:my-40 bg-slate-900 text-white w-1/2 rounded-lg">
-      <form action="/" method="post" encType="multipart/form-data">
+      <form action="/" method="post" encType="multipart/form-data" id="movieForm">
         {/* Input File */}
         <div className="flex items-center justify-center w-full mb-4">
           <label
-            htmlFor="dropzone-file"
+            htmlFor="movieImage"
             className="flex flex-col items-center justify-center w-full h-64 border-2 border-dashed rounded-lg cursor-pointer bg-white  border-white-600 hover:border-gray-100 hover:bg-gray-200"
           >
             {!file ? (
@@ -213,10 +213,10 @@ const AddMovies = () => {
                 </p>
               </div>
             ) : (
-              <img src={file} className="overflow-hidden object-contain" />
+              <img src={file} className="overflow-hidden object-contain"/>
             )}
             <input
-              id="dropzone-file"
+              id="movieImage"
               type="file"
               name="movieImage"
               className="hidden"
@@ -250,13 +250,13 @@ const AddMovies = () => {
 
         <div className="group relative mb-4">
           <label
-            htmlFor="default-range"
+            htmlFor="rating"
             className="block mb-2 text-sm font-medium text-white"
           >
             Ratings
           </label>
           <input
-            id="default-range"
+            id="rating"
             type="range"
             name="rating"
             value={formFields.rating}
@@ -289,7 +289,7 @@ const AddMovies = () => {
                   className="w-4 h-4 bg-gray-100 rounded-lg accent-violet-800"
                 />
                 <label
-                  htmlFor="inline-checkbox"
+                  htmlFor={`inline-checkbox-${index}`}
                   className="ml-2 text-sm font-medium text-white"
                 >
                   {genre.name

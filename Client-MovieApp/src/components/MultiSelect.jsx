@@ -11,6 +11,7 @@ const MultiSelect = forwardRef (({ genreList, handleGenreFilter},ref) => {
       ref={ref}
       isMulti
       name="genres"
+      id="genres"
       options={genreOptions}
       className="w-full md:w-1/4"
       classNamePrefix="select"

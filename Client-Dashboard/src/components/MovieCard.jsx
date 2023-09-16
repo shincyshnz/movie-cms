@@ -25,7 +25,7 @@ const MovieCard = ({ movie, setMovieList, movieList, isWatchLater }) => {
   };
 
   const handleDelete = async (event, id) => {
-    event.preventDefault();
+    // event.preventDefault();
     if (!isAuthenticated) {
       return navigate("/login");
     }

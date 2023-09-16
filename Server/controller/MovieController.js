@@ -1,4 +1,5 @@
 const movieModel = require("../model/movieModel");
+const { eventEmitter } = require("../routes/notificationRoutes");
 
 // Get Movies By ID
 const movieById = async (req, res) => {
@@ -50,8 +51,15 @@ const addMovies = async (req, res) => {
         const genresArr = genres.split(",");
 
         const movieImageUrl = res.locals.movieImageData?.secure_url
-        await movieModel.create({ title, rating, genres: genresArr, url: movieImageUrl });
+        const newMovie = await movieModel.create({ title, rating, genres: genresArr, url: movieImageUrl });
         res.json(movieImageUrl);
+
+        eventEmitter.emit('movieEvent', {
+            id:newMovie._id,
+            name : newMovie.title,
+            img : newMovie.url,
+            type: 1,
+        });
 
     } catch (error) {
         res.status(400).json({
@@ -79,6 +87,12 @@ const editMovies = async (req, res) => {
         }
 
         const isExists = await movieModel.findByIdAndUpdate(movieId, updatedMovie, { new: true });
+        // eventEmitter.emit('movieEvent', {
+        //     id:isExists._id,
+        //     name : isExists.title,
+        //     img : isExists.url,
+        //     type: 2,
+        // });
         res.json(isExists);
     } catch (error) {
         res.status(400).json({
@@ -153,7 +167,7 @@ const filterMovies = async (req, res) => {
             .sort("rating")
             .skip(skip)
             .limit(limit);
-        
+
         // page limit
         const moviesCount = await movieModel.find(query).count({});
         const pageCount = moviesCount / limit;
@@ -169,19 +183,6 @@ const filterMovies = async (req, res) => {
     }
 };
 
-// Get Movies count
-const countMovies = async (req, res) => {
-    try {
-        const movieList = await movieModel.find().count();
-        res.json(moviesCount);
-    } catch (error) {
-        res.json({
-            message: error.message,
-        });
-    }
-};
-
-
 module.exports = {
-    movieById, movies, addMovies, editMovies, deleteMovies, filterMovies, countMovies
+    movieById, movies, addMovies, editMovies, deleteMovies, filterMovies
 };

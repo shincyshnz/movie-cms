@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import MultiSelect from "./MultiSelect";
 import RatingStars from "./RatingStars";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 export const Filter = ({
   setFilterRequirements,
