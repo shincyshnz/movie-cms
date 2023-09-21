@@ -2,20 +2,25 @@
 
 TMDB is a web app built using React, Express and MongoDB. This app helps users to add, delete and update movie data including title, poster image, rating and genre.
 
-# Demo : 
+# Demo :
+## Add Genres - Demo
 [Genre Addition](
 https://github.com/shincyshnz/movie-cms/assets/48871950/8c52d558-de96-4656-9ab7-747088621c9c)
 
+## Login - Demo
 [Login](https://github.com/shincyshnz/movie-cms/assets/48871950/b5ca190b-3153-4b00-b308-c0324516bfe1)
 
+## Add Movies - Demo
 [Movie addition](https://github.com/shincyshnz/movie-cms/assets/48871950/3d7ce76a-ab23-4fad-b2b0-61cf9f1d7c9b)
 
+## Watch Later - Demo
 [Watch Later page](https://github.com/shincyshnz/movie-cms/assets/48871950/5f26b0b2-1b1b-4995-a584-2ba0b31d6fce)
 
+## Pagination and Filter - Demo
+[Pagination and Filter](https://github.com/shincyshnz/movie-cms/assets/48871950/bb1fb2cc-442d-4d61-828b-e122ed53e348)
 
 ## Notification - Demo
 [Notification](https://github.com/shincyshnz/movie-cms/assets/48871950/0a465069-ee9c-4afc-951d-bf4e029cbdb8)
-
 
 
 # Login
