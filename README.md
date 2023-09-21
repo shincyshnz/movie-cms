@@ -1,6 +1,7 @@
 # TMDB
 
-TMDB is a web app built using React, Express and MongoDB. This app helps users to add, delete and update movie data including title, poster image, rating and genre.
+TMDB is a web app built using React, Express and MongoDB. The TMDB-Admin Panel helps Admin to add, delete and update movie data including title, poster image, rating and genre.
+Users can view movies list in TMDB-Mobvie App and they can add the movies to watch later. Pagination helps to restrict the number of movies listed in the page. Users can filter movies based on genres and rating.
 
 # Demo :
 ## Add Genres - Demo
