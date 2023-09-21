@@ -90,6 +90,29 @@ const Dashboard = () => {
     // };
   }, [currentPage]);
 
+  useEffect(() => {
+    // Open a connection to recieve events from server
+    const eventSource = new EventSource(
+      import.meta.env.VITE_NOTIFICATION_SSE_URL
+    );
+
+    // attaching handlers to recieve message events
+    eventSource.onmessage = (event) => {
+      const movieData = JSON.parse(event.data);
+      if(movieData.type === 3){
+        const updatedMovieList = movieList.filter(movie => movie._id !== movieData.id );
+        setMovieList(updatedMovieList);
+        setAllMovieList(updatedMovieList);
+      }
+      if(movieData){
+        fetchMovies();
+      }
+    };
+
+    //terminatin connection on component unmount
+    return () => eventSource.close();
+  }, []);
+
   return (
     <div className="flex flex-col justify-center items-start w-full px-5 md:px-10 xl:px-0">
       <Filter

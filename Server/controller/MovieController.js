@@ -56,8 +56,8 @@ const addMovies = async (req, res) => {
 
         eventEmitter.emit('movieEvent', {
             id:newMovie._id,
-            name : newMovie.title,
-            img : newMovie.url,
+            title : newMovie.title,
+            url : newMovie.url,
             type: 1,
         });
 
@@ -87,12 +87,12 @@ const editMovies = async (req, res) => {
         }
 
         const isExists = await movieModel.findByIdAndUpdate(movieId, updatedMovie, { new: true });
-        // eventEmitter.emit('movieEvent', {
-        //     id:isExists._id,
-        //     name : isExists.title,
-        //     img : isExists.url,
-        //     type: 2,
-        // });
+        eventEmitter.emit('movieEvent', {
+            id:isExists._id,
+            title : isExists.title,
+            url : isExists.url,
+            type: 2,
+        });
         res.json(isExists);
     } catch (error) {
         res.status(400).json({
@@ -107,6 +107,12 @@ const deleteMovies = async (req, res) => {
         const { id } = req.params;
         const removedMovie = await movieModel.findOneAndRemove({ _id: id });
         if (removedMovie) {
+            eventEmitter.emit('movieEvent', {
+                id : removedMovie._id,
+                title : removedMovie.title,
+                url : removedMovie.url,
+                type: 3,
+            });
             res.status(200).json(removedMovie);
         }
     } catch (error) {
