@@ -13,6 +13,10 @@ https://github.com/shincyshnz/movie-cms/assets/48871950/8c52d558-de96-4656-9ab7-
 [Watch Later page](https://github.com/shincyshnz/movie-cms/assets/48871950/5f26b0b2-1b1b-4995-a584-2ba0b31d6fce)
 
 
+## Notification - Demo
+[Notification](https://github.com/shincyshnz/movie-cms/assets/48871950/0a465069-ee9c-4afc-951d-bf4e029cbdb8)
+
+
 
 # Login
 ![Screenshot from 2023-08-29 12-48-00](https://github.com/shincyshnz/movie-cms/assets/48871950/a590b2f7-6a09-42c3-9e86-c247b66fbc90)
