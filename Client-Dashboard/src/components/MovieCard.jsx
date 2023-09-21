@@ -57,11 +57,11 @@ const MovieCard = ({ movie, setMovieList, movieList, isWatchLater }) => {
           alt={`${title}-poster`}
           className="md:w-1/3 rounded-t-2xl md:rounded-l-2xl md:rounded-t-none md:rounded-tl-2xl"
         />
-        <div className="px-5 py-10 text-gray-600 my-auto">
+        <div className="px-5 py-10 text-gray-400 my-auto">
           <h2 className="font-bold text-xl sm:text-lg md:text-3xl mb-3">
             {title[0].toUpperCase() + title.slice(1)}
           </h2>
-          <p className="mb-3">
+          <p className="mb-3 text-gray-600">
             Lorem Ipsum is simply dummy text of the printing and typesetting
             industry. Lorem Ipsum has been the industry's standard dummy text.
           </p>

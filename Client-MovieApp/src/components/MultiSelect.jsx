@@ -13,7 +13,7 @@ const MultiSelect = forwardRef (({ genreList, handleGenreFilter},ref) => {
       name="genres"
       id="genres"
       options={genreOptions}
-      className="w-full md:w-1/4"
+      className="w-full lg:w-1/4"
       classNamePrefix="select"
       onChange={(e, selectOption) => handleGenreFilter(e, selectOption)}
     />
