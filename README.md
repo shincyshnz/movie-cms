@@ -4,10 +4,6 @@ TMDB is a web app built using React, Express and MongoDB. The TMDB-Admin Panel h
 Users can view movies list in TMDB-Mobvie App and they can add the movies to watch later. Pagination helps to restrict the number of movies listed in the page. Users can filter movies based on genres and rating.
 
 # Demo : 
-[https://todo-app-node-sigma.vercel.app/](https://todo-app-node-sigma.vercel.app/)
-
-<!-- #### Note : FrontEnd hosted in vercel and Backend in render -->
-
 ## Add Genres - Demo
 [Genre Addition](
 https://github.com/shincyshnz/movie-cms/assets/48871950/8c52d558-de96-4656-9ab7-747088621c9c)
