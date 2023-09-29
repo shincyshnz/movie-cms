@@ -15,6 +15,7 @@ app.use(cors({
     // Specifying domain of frontend to store refresh token as httpOnly cookie
     // origin : ["http://localhost","http://localhost:5173","http://localhost:5174"],
     // origin:["https://movie-cms-movies-lma4rhkp5-shincyshnz.vercel.app/"],
+    origin: "*",
     credentials : true,
     cookie:{
         sameSite : "none",
