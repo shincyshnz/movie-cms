@@ -12,7 +12,7 @@ export const axiosInstance = axios.create({
 axiosInstance.interceptors.response.use(
     (response) => response,
     async (error) => {
-        if (error.response.status === 401) {
+        if (error?.response?.status === 401) {
             localStorage.clear();
             // const response = await axiosInstance("/refresh-token");
             // localStorage.setItem("x-token", response.data.accessToken);
