@@ -8,7 +8,7 @@ import { axiosInstance } from "../utils/Interceptors";
 // import { axiosInstance } from "../utils/Interceptors";
 
 const Login = () => {
-  const { storeToken } = useAuth();
+  const { storeToken, setUserEmail } = useAuth();
   const [input, setInput] = useState({
     email: "",
     password: "",
@@ -62,6 +62,7 @@ const Login = () => {
       // Store Access Token in localstorage
       if (response?.status === 200) {
         storeToken(response.data.accessToken);
+        setUserEmail(prev=>response.data.email);
         // save user role in localstorage
         localStorage.setItem("userRole", response.data.userRole);
         navigate("/dashboard", { replace: true });

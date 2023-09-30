@@ -5,7 +5,7 @@ import Notification from "./Notification";
 import { MdOutlineWatchLater, MdLogout } from "react-icons/md";
 
 const Header = () => {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, userEmail } = useAuth();
   return (
     <>
       <div className="w-full h-16 bg-gray-950 text-white flex justify-between px-5 py-5">
@@ -23,6 +23,7 @@ const Header = () => {
             </Link>
           ) : (
             <>
+            <h4>{userEmail}</h4>
               <Link
                 to="/watch-later"
                 className="flex items-center text-xl gap-3.5 font-medium p-3 rounded-md focus:ring-1 hover:text-violet-800 focus:bg-violet-950"

@@ -17,11 +17,13 @@ const register = async (req, res) => {
             return res.status(404).json({ message: "User already exists" });
         }
         const hashedPass = await generatedPasswordHash(password, SALT);
-        await Users.create({ email, username, password: hashedPass })
+        const newUser = await Users.create({ email, username, password: hashedPass })
+        if (newUser) {
+            res.json({
+                message: "Account has been created"
+            });
+        }
 
-        res.json({
-            message: "Account has been created"
-        });
     } catch (error) {
         res.json({
             message: error.message
@@ -52,7 +54,7 @@ const login = async (req, res) => {
             httpOnly: true,
             secure: true,
         })
-        res.json({ _id: user._id, email: user.email, accessToken, userRole : user.userRole });
+        res.json({ _id: user._id, email: user.email, accessToken, userRole: user.userRole });
 
     } catch (error) {
         res.status(404).json({
@@ -200,8 +202,8 @@ const emailVerification = async (req, res) => {
 
         if (otp) {
             expireOtp = setTimeout(() => {
-                    otp = 0;
-                },120000); //120000ms == 2minutes
+                otp = 0;
+            }, 120000); //120000ms == 2minutes
 
             res.status(200).json({
                 email: isEmailExists.email,

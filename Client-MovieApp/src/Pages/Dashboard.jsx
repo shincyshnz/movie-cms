@@ -23,6 +23,7 @@ const Dashboard = () => {
   const [pageCount, setPageCount] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [isFilteredData, setIsFilteredData] = useState(false);
+ 
 
   const fetchMovies = async () => {
     try {
@@ -99,12 +100,14 @@ const Dashboard = () => {
     // attaching handlers to recieve message events
     eventSource.onmessage = (event) => {
       const movieData = JSON.parse(event.data);
-      if(movieData.type === 3){
-        const updatedMovieList = movieList.filter(movie => movie._id !== movieData.id );
+      if (movieData.type === 3) {
+        const updatedMovieList = movieList.filter(
+          (movie) => movie._id !== movieData.id
+        );
         setMovieList(updatedMovieList);
         setAllMovieList(updatedMovieList);
       }
-      if(movieData){
+      if (movieData) {
         fetchMovies();
       }
     };
