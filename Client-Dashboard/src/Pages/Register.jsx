@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useError } from "../context/ErrorContext";
 import Error from "../components/Error";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -198,12 +198,12 @@ const Register = () => {
         <div className="flex items-center justify-between pt-3">
           <p className="text-violet-500 text-xs italic">
             Already have an account?&nbsp;
-            <a
+            <Link
               className="inline-block align-baseline font-bold text-sm text-violet-500 hover:text-violet-800"
               href="/login"
             >
               Login
-            </a>
+            </Link>
           </p>
         </div>
       </form>
