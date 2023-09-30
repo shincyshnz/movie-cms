@@ -136,12 +136,12 @@ const Login = () => {
         <div className="flex items-center justify-between pt-3">
           <p className="text-violet-500 text-xs italic">
             New User?&nbsp;
-            <Link
+            {/* <Link
               className="inline-block align-baseline font-bold text-sm text-violet-500 hover:text-violet-800"
               href="/register"
             >
               Register
-            </Link>
+            </Link> */}
           </p>
         </div>
       </form>
