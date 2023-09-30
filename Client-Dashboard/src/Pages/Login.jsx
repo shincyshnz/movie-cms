@@ -125,12 +125,12 @@ const Login = () => {
           >
             Sign In
           </button>
-          <a
+          <Link
             className="inline-block align-baseline font-bold text-sm text-violet-500 hover:text-violet-800"
             href="#"
           >
             Forgot Password?
-          </a>
+          </Link>
         </div>
 
         <div className="flex items-center justify-between pt-3">
