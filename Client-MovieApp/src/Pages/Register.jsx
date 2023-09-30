@@ -72,6 +72,7 @@ const Register = () => {
     if (errorObj.length > 0) return;
 
     try {
+      
       const response = await axios(
         `${import.meta.env.VITE_AUTH_URL}/register`,
         {
@@ -81,7 +82,12 @@ const Register = () => {
       );
 
       if (response.status === 200) {
-        toast.success("Account created Successfully.Please Login!")
+        // toast.success("Account created Successfully.Please Login!");
+        toast.promise(response, {
+          loading: 'Loading',
+          success: 'Account created Successfully.Please Login!',
+          error: 'Error while registering. Try Again!',
+       })
         navigate("/login");
       }
 
