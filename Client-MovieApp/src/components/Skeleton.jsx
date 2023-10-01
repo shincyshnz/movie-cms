@@ -4,7 +4,7 @@ const Skeleton = () => {
   return (
     <div
       role="status"
-      className="space-y-8 animate-pulse md:space-y-0 md:space-x-8 md:flex md:items-center px-5 py-10 bg-slate-900"
+      className="space-y-8 animate-pulse md:space-y-0 md:space-x-8 md:flex md:items-center px-5 py-10 bg-slate-900 rounded-2xl"
     >
       <div className="flex items-center justify-center w-full h-48 bg-gray-300 rounded sm:w-96 dark:bg-gray-700">
         <div

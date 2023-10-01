@@ -26,8 +26,9 @@ const Dashboard = () => {
 
   const fetchMovies = async () => {
     try {
-      setMovieList([]);
       setIsLoading(true);
+      setMovieList([]);
+
       // dashboard movie list
       const response = await axios(import.meta.env.VITE_MOVIES_URL, {
         params: {
@@ -35,10 +36,11 @@ const Dashboard = () => {
           limit: import.meta.env.VITE_PAGINATION_LIMIT,
         },
       });
-
-      setPageCount((prev) => (prev = Math.ceil(response.data.pageCount)));
-      setMovieList((prev) => (prev = response?.data.movieList));
-      setAllMovieList((prev) => (prev = response?.data.movieList));
+      if (response) {
+        setPageCount((prev) => (prev = Math.ceil(response.data.pageCount)));
+        setMovieList((prev) => (prev = response?.data.movieList));
+        setAllMovieList((prev) => (prev = response?.data.movieList));
+      }
     } catch (error) {
       deleteErrorObj("apiError");
       handleErrorObj(
@@ -52,9 +54,9 @@ const Dashboard = () => {
 
   const fetchFilteredMovies = async () => {
     try {
+      setIsLoading(true);
       setMovieList([]);
       setPageCount(0);
-      setIsLoading(true);
       const response = await axios(
         `${import.meta.env.VITE_MOVIES_URL}/filter-genre`,
         {
@@ -78,7 +80,7 @@ const Dashboard = () => {
       setIsFilteredData((prev) => (prev = true));
     } catch (error) {
       toast.error(error.message);
-    }finally{
+    } finally {
       setIsLoading(false);
     }
   };
@@ -119,7 +121,7 @@ const Dashboard = () => {
   }, []);
 
   return (
-    <div className="flex flex-col justify-center items-start w-full px-5 md:px-10 xl:px-0">
+    <div className="flex flex-col justify-center items-start w-full px-5 pb-5 md:px-10 xl:px-0">
       <Filter
         fetchFilteredMovies={fetchFilteredMovies}
         fetchMovies={fetchMovies}
@@ -134,18 +136,15 @@ const Dashboard = () => {
         fetchMovies={!isFilteredData ? fetchMovies : fetchFilteredMovies}
       />
 
-      <div className="xl:py-5 xl:px-48 grid-cols-1 lg:grid-cols-2 gap-x-16 gap-y-2 min-h-max grid">
-        {isLoading && (
+      <div className="w-full xl:py-5 xl:px-48 grid-cols-1 lg:grid-cols-2 gap-x-16 gap-y-2 min-h-max grid">
+        {isLoading ? (
           <>
             <Skeleton />
             <Skeleton />
             <Skeleton />
             <Skeleton />
-            <Skeleton />
-            <Skeleton />
           </>
-        )}
-        {!isLoading && movieList.length > 0 ? (
+        ): movieList.length > 0 ? (
           movieList?.map((movie) => {
             return (
               <MovieCard

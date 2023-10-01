@@ -11,7 +11,7 @@ const Header = () => {
       <div className="w-full h-16 bg-gray-950 text-white flex justify-between px-5 py-5">
         <Link to="/" className="flex gap-2 logo">
           <img className="w-9" src="/movie-recording.png" />
-          <h5 className="sm:invisible md:visible font-extrabold">TMDB - MOVIE APP</h5>
+          <h5 className="invisible md:visible font-extrabold">TMDB - MOVIE APP</h5>
         </Link>
         <div className="notification flex gap-2">
           {!isAuthenticated ? (
@@ -23,7 +23,7 @@ const Header = () => {
             </Link>
           ) : (
             <>
-            <h4 className="sm:text-sm md:text-md">{userEmail}</h4>
+            <h4 className="text-xs mt-1 md:text-sm">{userEmail}</h4>
               <Link
                 to="/watch-later"
                 className="flex items-center text-xl gap-3.5 font-medium p-3 rounded-md focus:ring-1 hover:text-violet-800 focus:bg-violet-950"

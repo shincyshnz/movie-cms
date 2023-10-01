@@ -17,6 +17,7 @@ export const Filter = ({
   const [genreList, setGenreList] = useState([]);
 
   useEffect(() => {
+    setIsLoading(true);
     fetchGenres();
   }, []);
 
@@ -26,6 +27,8 @@ export const Filter = ({
       setGenreList((prev) => (prev = response?.data));
     } catch (error) {
       toast.error(error.message);
+    } finally{
+      setIsLoading(false);
     }
   };
   //   try {
@@ -65,9 +68,7 @@ export const Filter = ({
     const newfilter = filterRequirements;
     newfilter[req] = value;
     setFilterRequirements((prev) => (prev = newfilter));
-    setIsLoading((prev) => (prev = true));
     fetchFilteredMovies();
-    setIsLoading((prev) => (prev = false));
   };
 
   // filter movies based on rating

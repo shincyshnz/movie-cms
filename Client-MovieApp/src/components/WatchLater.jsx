@@ -44,20 +44,21 @@ const WatchLater = () => {
 
   return (
     <div className="flex flex-col justify-center items-start w-full px-5 md:px-10 xl:px-0">
-        {/* <Filter setMovieList={setMovieList} allMovieList={allMovieList} /> */}
+      <Pagination
+        pageCount={pageCount}
+        setCurrentPage={setCurrentPage}
+        fetchMovies={fetchMovies}
+      />
 
-      <div className="xl:py-5 xl:px-48 grid-cols-1 lg:grid-cols-2 gap-x-16 gap-y-2 min-h-max grid mt-10">
-        {isLoading && (
+      <div className="xl:py-5 xl:px-48 grid-cols-1 lg:grid-cols-2 gap-x-16 gap-y-2 min-h-max grid">
+        {isLoading ? (
           <>
             <Skeleton />
             <Skeleton />
             <Skeleton />
             <Skeleton />
-            <Skeleton />
-            <Skeleton />
           </>
-        )}
-        {movieList.length > 0 ? (
+        ) : movieList.length > 0 ? (
           movieList?.map((movie) => {
             return (
               <MovieCard
@@ -73,12 +74,6 @@ const WatchLater = () => {
           <p className="text-white text-2xl">Sorry! No Movies</p>
         )}
       </div>
-
-        <Pagination
-          pageCount={pageCount}
-          setCurrentPage={setCurrentPage}
-          fetchMovies = {fetchMovies}
-        />
     </div>
   );
 };
