@@ -27,7 +27,7 @@ const Dashboard = () => {
   const fetchMovies = async () => {
     try {
       setMovieList([]);
-
+      setIsLoading(true);
       // dashboard movie list
       const response = await axios(import.meta.env.VITE_MOVIES_URL, {
         params: {
@@ -54,6 +54,7 @@ const Dashboard = () => {
     try {
       setMovieList([]);
       setPageCount(0);
+      setIsLoading(true);
       const response = await axios(
         `${import.meta.env.VITE_MOVIES_URL}/filter-genre`,
         {
@@ -77,6 +78,8 @@ const Dashboard = () => {
       setIsFilteredData((prev) => (prev = true));
     } catch (error) {
       toast.error(error.message);
+    }finally{
+      setIsLoading(false);
     }
   };
 
@@ -158,7 +161,6 @@ const Dashboard = () => {
           <p className="text-white text-2xl">Sorry! No Movies</p>
         )}
       </div>
-
     </div>
   );
 };
