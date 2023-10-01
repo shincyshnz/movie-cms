@@ -9,6 +9,8 @@ export const Filter = ({
   filterRequirements,
   fetchFilteredMovies,
   fetchMovies,
+  isLoading,
+  setIsLoading,
 }) => {
   const ref = useRef(null);
   const [clickable, setClickable] = useState(true);
@@ -63,7 +65,9 @@ export const Filter = ({
     const newfilter = filterRequirements;
     newfilter[req] = value;
     setFilterRequirements((prev) => (prev = newfilter));
+    setIsLoading((prev) => (prev = true));
     fetchFilteredMovies();
+    setIsLoading((prev) => (prev = false));
   };
 
   // filter movies based on rating

@@ -122,6 +122,8 @@ const Dashboard = () => {
         fetchMovies={fetchMovies}
         filterRequirements={filterRequirements}
         setFilterRequirements={setFilterRequirements}
+        isLoading={isLoading}
+        setIsLoading={setIsLoading}
       />
       <Pagination
         pageCount={pageCount}
