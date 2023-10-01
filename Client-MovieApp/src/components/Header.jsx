@@ -11,7 +11,7 @@ const Header = () => {
       <div className="w-full h-16 bg-gray-950 text-white flex justify-between px-5 py-5">
         <Link to="/" className="flex gap-2 logo">
           <img className="w-9" src="/movie-recording.png" />
-          <h5 className=" font-extrabold">TMDB - MOVIE APP</h5>
+          <h5 className="sm:invisible md:visible font-extrabold">TMDB - MOVIE APP</h5>
         </Link>
         <div className="notification flex gap-2">
           {!isAuthenticated ? (
