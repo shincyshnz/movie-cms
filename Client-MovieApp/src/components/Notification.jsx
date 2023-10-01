@@ -35,7 +35,7 @@ const Notification = () => {
   const handleNotificationClear = (event, index) => {
     event.preventDefault();
 
-    const newNoti = notification.slice((index,1));
+    const newNoti = notification.slice((index, 1));
     console.log(newNoti);
     setNotification((prev) => (prev = newNoti));
   };
@@ -60,6 +60,8 @@ const Notification = () => {
         <div
           id="dropdown"
           className="absolute z-10 top-16 right-4 md:w-1/2 lg:w-1/4 py-3 bg-white rounded-sm shadow"
+          data-te-toggle="tooltip"
+          title="Notification"
         >
           <ul
             className="py-2 text-gray-500 dark:text-gray-200"
@@ -96,7 +98,8 @@ const Notification = () => {
                       >
                         {tag}
                       </span>
-                      <FiX className="text-lg"
+                      <FiX
+                        className="text-lg"
                         onClick={(e) => handleNotificationClear(e, index)}
                       ></FiX>
                     </div>
