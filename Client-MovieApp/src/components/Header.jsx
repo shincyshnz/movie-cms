@@ -23,7 +23,7 @@ const Header = () => {
             </Link>
           ) : (
             <>
-            <h4>{userEmail}</h4>
+            <h4 className="sm:text-sm md:text-md">{userEmail}</h4>
               <Link
                 to="/watch-later"
                 className="flex items-center text-xl gap-3.5 font-medium p-3 rounded-md focus:ring-1 hover:text-violet-800 focus:bg-violet-950"

@@ -18,7 +18,6 @@ export const Pagination = ({
     const page = +e.selected + 1;
 
     setCurrentPage((prev) => (prev = page));
-    // fetchMovies(page);
     fetchMovies();
   };
 
@@ -26,11 +25,11 @@ export const Pagination = ({
     <ReactPaginate
       breakLabel="..."
       className="react-paginate md:px-28 xl:px-48 py-5"
-      nextLabel="next >"
+      nextLabel=" > "
       onPageChange={handlePageClick}
       pageRangeDisplayed={5}
       pageCount={Math.ceil(pageCount)}
-      previousLabel="< prev"
+      previousLabel=" < "
       renderOnZeroPageCount={null}
     />
   );

@@ -23,7 +23,6 @@ const Dashboard = () => {
   const [pageCount, setPageCount] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [isFilteredData, setIsFilteredData] = useState(false);
- 
 
   const fetchMovies = async () => {
     try {
@@ -124,6 +123,11 @@ const Dashboard = () => {
         filterRequirements={filterRequirements}
         setFilterRequirements={setFilterRequirements}
       />
+      <Pagination
+        pageCount={pageCount}
+        setCurrentPage={setCurrentPage}
+        fetchMovies={!isFilteredData ? fetchMovies : fetchFilteredMovies}
+      />
 
       <div className="xl:py-5 xl:px-48 grid-cols-1 lg:grid-cols-2 gap-x-16 gap-y-2 min-h-max grid">
         {isLoading && (
@@ -132,9 +136,11 @@ const Dashboard = () => {
             <Skeleton />
             <Skeleton />
             <Skeleton />
+            <Skeleton />
+            <Skeleton />
           </>
         )}
-        {movieList.length > 0 ? (
+        {!isLoading && movieList.length > 0 ? (
           movieList?.map((movie) => {
             return (
               <MovieCard
@@ -151,16 +157,6 @@ const Dashboard = () => {
         )}
       </div>
 
-      {/* Checking for filtered data */}
-      {/* {filterRequirements.rating != 0 &&
-        filterRequirements.genreArr.length > 0 &&
-        setIsFilteredData((prev) => (prev = !prev))} */}
-
-      <Pagination
-        pageCount={pageCount}
-        setCurrentPage={setCurrentPage}
-        fetchMovies={!isFilteredData ? fetchMovies : fetchFilteredMovies}
-      />
     </div>
   );
 };
